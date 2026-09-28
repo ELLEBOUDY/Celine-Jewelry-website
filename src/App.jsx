@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useLanguage } from './context/LanguageContext.jsx';
 import { useCart } from './context/CartContext.jsx';
 import { Header } from './components/Header.jsx';
@@ -111,6 +112,9 @@ export const App = () => {
       {/* Cart Drawer & Modals */}
       <CartDrawer />
       <ProductModal />
+
+      {/* Speed Insights */}
+      <SpeedInsights />
     </div>
   );
 };
