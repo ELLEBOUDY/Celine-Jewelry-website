@@ -204,15 +204,9 @@ This removes friction for Egyptian customers who prefer WhatsApp-based shopping.
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License**.
-
----
-
 <div align="center">
 
-*Crafted with ✦ in Cairo*
+*Crafted with ✦ by Mahmoud Elleboudy*
 
 **CELINE JEWELRY** — Modern Heirlooms Born Between The Nile & The Mediterranean
 
