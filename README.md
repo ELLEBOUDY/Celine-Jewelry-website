@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo.png" alt="CELINE JEWELRY" width="120" />
+<img src="/images/logo.png" alt="CELINE JEWELRY" width="120" />
 
 # ✦ CELINE JEWELRY ✦
 
