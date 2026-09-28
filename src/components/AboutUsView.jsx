@@ -64,7 +64,7 @@ export const AboutUsView = () => {
           {/* Arched Photo Card */}
           <div className="relative w-full max-w-md aspect-[3/4] rounded-t-[140px] rounded-b-[40px] overflow-hidden shadow-2xl bg-[#EAE5DC]">
             <img
-              src="/images/Kareem.PNG"
+              src="images/Kareem.PNG"
               alt={t.masterGoldsmithImageAlt}
               loading="lazy"
               decoding="async"
