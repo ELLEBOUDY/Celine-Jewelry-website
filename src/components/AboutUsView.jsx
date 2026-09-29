@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { trackEvent } from '../utils/analytics.js';
 import { MessageCircle, Sparkles } from 'lucide-react';
 
 export const AboutUsView = () => {
@@ -8,6 +9,7 @@ export const AboutUsView = () => {
   const { setCurrentView } = useCart();
 
   const handleOpenWhatsApp = () => {
+    trackEvent('click_whatsapp', { source: 'about_us' });
     const message = encodeURIComponent('مرحباً، أود الاستفسار عن مجوهراتكم');
     window.open(`https://api.whatsapp.com/send?phone=201126110951&text=${message}`, '_blank', 'noopener,noreferrer');
   };

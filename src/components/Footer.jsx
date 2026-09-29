@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { trackEvent } from '../utils/analytics.js';
 import { MessageCircle } from 'lucide-react';
 import logo from '../../images/logo.png';
 
@@ -38,6 +39,7 @@ export const Footer = () => {
 
   const handleOpenWhatsApp = () =>
   {
+    trackEvent('click_whatsapp', { source: 'footer' });
     const message = encodeURIComponent('مرحباً، أود الاستفسار عن مجوهراتكم');
     window.open(`https://api.whatsapp.com/send?phone=201126110951&text=${message}`, '_blank', 'noopener,noreferrer');
   };

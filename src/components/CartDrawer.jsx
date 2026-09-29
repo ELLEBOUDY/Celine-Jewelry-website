@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
+import { trackEvent } from '../utils/analytics.js';
 import { X, Plus, Minus, Trash2, ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const CartDrawer = () => {
@@ -21,6 +22,11 @@ export const CartDrawer = () => {
   const isAr = language === 'ar';
 
   const handleProceedToCheckout = () => {
+    trackEvent('begin_checkout', {
+      item_count: cart.reduce((count, item) => count + item.quantity, 0),
+      value: total,
+      currency: 'EGP',
+    });
     setIsCartOpen(false);
     setCurrentView('checkout');
     window.scrollTo({ top: 0, behavior: 'smooth' });

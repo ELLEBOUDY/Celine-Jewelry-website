@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
+import { trackEvent } from '../utils/analytics.js';
 import { useCart } from '../context/CartContext.jsx';
 import { ArrowLeft, ArrowRight, User, Phone, MapPin, Sparkles, ShieldCheck, Lock, Send, Check } from 'lucide-react';
 
@@ -73,6 +74,12 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
   const handleSendViaWhatsApp = () =>
   {
+    trackEvent('send_whatsapp_order', {
+      source: 'checkout',
+      item_count: cart.reduce((total, item) => total + item.quantity, 0),
+      value: cart.reduce((total, item) => total + item.product.price * item.quantity, 0),
+      currency: 'EGP',
+    });
     triggerConfetti();
     setOrderPlaced(true);
     const storeWhatsAppNumber = "201126110951"; // Can be replaced by the store owner's WhatsApp number
