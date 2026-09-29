@@ -165,7 +165,7 @@ export const translations = {
     masterGuild: "رابطة كبار الحرفيين",
     masterGuildLoc: "خان الخليلي • القاهرة",
     masterGuildNote: "كل قطعة تصاغ وتشطب يدوياً ويتم فحصها بدقة قبل اعتمادها.",
-    courierFeatureTitle: "توصيل أبيض فاخر مجاني",
+    courierFeatureTitle: "توصيل  فاخر مجاني",
     courierFeatureDesc: "توصيل سريع وآمن بسيارات مجهزة في القاهرة والجيزة والإسكندرية .",
     guaranteeFeatureTitle: "ضمان الأتيليه لمدة عامين",
     guaranteeFeatureDesc: "تلميع وتعديل مقاسات مجاناً في صالة عرض القاهرة طوال فترة الضمان .",
