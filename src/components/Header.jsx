@@ -25,21 +25,21 @@ export const Header = () => {
         {t.topAnnouncement}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-2 min-h-20 py-3 sm:h-20 sm:py-0">
           
           {/* Brand Logo */}
           <button
             onClick={() => setCurrentView('home')}
-            className="flex items-center gap-3 text-start cursor-pointer focus:outline-none"
+            className="flex min-w-0 items-center gap-2 sm:gap-3 text-start cursor-pointer focus:outline-none"
           >
             <img
               src={logo}
               alt={t.brandName}
-              className="w-10 h-10 rounded-full object-cover shadow-xs"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shadow-xs shrink-0"
             />
             <div>
-              <span className="text-xl sm:text-2xl font-serif tracking-[0.2em] font-medium text-[#1A1A1A] block">
+              <span className="text-lg sm:text-2xl font-serif tracking-[0.14em] sm:tracking-[0.2em] font-medium text-[#1A1A1A] block truncate">
                 {t.brandName}
               </span>
             </div>
@@ -80,44 +80,35 @@ export const Header = () => {
           </nav>
 
           {/* Actions Bar */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-4">
             
             {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-[#C5A880]/50 text-xs font-semibold text-[#1A1A1A] hover:bg-[#EAE5DC] transition-colors cursor-pointer bg-white/60"
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-full border border-[#C5A880]/50 text-[10px] sm:text-xs font-semibold text-[#1A1A1A] hover:bg-[#EAE5DC] transition-colors cursor-pointer bg-white/60 whitespace-nowrap"
               title="Toggle Language"
             >
               <Globe className="w-3.5 h-3.5 text-[#9A7B56]" />
               <span>{isAr ? 'EN' : 'عربي'}</span>
             </button>
 
-            {/* Wishlist Icon
-            <div className="relative p-2 text-[#1A1A1A] hover:text-[#9A7B56] transition-colors cursor-pointer hidden sm:block">
-              <Heart className="w-5 h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-[#59492E] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
-                  {wishlist.length}
-                </span>
-              )}
-            </div> */}
-
             {/* Cart Pill Button matching Figma: 2 / E£5,400 */}
             <button
               id="header-cart-btn"
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-xs font-semibold transition-all cursor-pointer shadow-xs"
+              className="flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-[10px] sm:text-xs font-semibold transition-all cursor-pointer shadow-xs whitespace-nowrap"
             >
               <ShoppingBag className="w-4 h-4 text-[#59492E]" />
-              <span>
+              <span className="hidden sm:inline">
                 {totalItemsCount} / {t.currency}{total.toLocaleString()}
               </span>
+              <span className="sm:hidden">{totalItemsCount}</span>
             </button>
 
             {/* Mobile Menu Icon */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#1A1A1A] md:hidden cursor-pointer"
+              className="p-2 -me-1 text-[#1A1A1A] md:hidden cursor-pointer shrink-0"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

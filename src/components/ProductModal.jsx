@@ -25,25 +25,26 @@ export const ProductModal = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-xs overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-6 bg-black/70 backdrop-blur-xs overflow-y-auto"
       onClick={() => setQuickViewProduct(null)}
     >
+      <button
+        onClick={() => setQuickViewProduct(null)}
+        className="fixed top-3 end-3 sm:top-6 sm:end-6 z-[60] w-10 h-10 rounded-full bg-white border border-[#EAE5DC] flex items-center justify-center text-[#1A1A1A] shadow-lg hover:bg-[#1A1A1A] hover:text-white transition-colors cursor-pointer"
+        aria-label={isAr ? 'إغلاق تفاصيل المنتج' : 'Close product details'}
+      >
+        <X className="w-5 h-5" />
+      </button>
+
       <div 
-        className="relative w-full max-w-4xl bg-[#FAF8F5] border border-[#EAE5DC] rounded-3xl overflow-hidden shadow-2xl my-6"
+        className="relative w-full max-w-4xl max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] bg-[#FAF8F5] border border-[#EAE5DC] rounded-2xl sm:rounded-3xl overflow-y-auto shadow-2xl my-2 sm:my-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
-        <button
-          onClick={() => setQuickViewProduct(null)}
-          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/90 border border-[#EAE5DC] flex items-center justify-center text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors cursor-pointer"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
         <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-start">
           
           {/* Left Large Showcase Image */}
-          <div className="md:col-span-6 relative aspect-[4/5] bg-[#F4F0E8] overflow-hidden p-6 sm:p-8 flex items-center justify-center">
+          <div className="md:col-span-6 relative aspect-[4/3] sm:aspect-[4/5] bg-[#F4F0E8] overflow-hidden p-3 sm:p-8 flex items-center justify-center">
             <div className="relative w-full h-full min-h-0 rounded-2xl overflow-hidden shadow-md">
               <img
                 src={quickViewProduct.image}
@@ -66,7 +67,7 @@ export const ProductModal = () => {
           </div>
 
           {/* Right Product Options & Actions */}
-          <div className="md:col-span-6 p-6 sm:p-8 flex flex-col space-y-6">
+          <div className="md:col-span-6 p-4 sm:p-8 flex flex-col space-y-5 sm:space-y-6">
             
             <div>
               <span className="text-[10px] font-mono tracking-widest text-[#777777] uppercase block mb-1">
@@ -170,7 +171,7 @@ export const ProductModal = () => {
                     addToCart(quickViewProduct, quantity);
                     setQuickViewProduct(null);
                   }}
-                  className="flex-1 py-3 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  className="flex-1 min-w-0 py-3 px-2 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>ADD TO BAG — {t.currency}{(quickViewProduct.price * quantity).toLocaleString()}</span>
@@ -180,7 +181,7 @@ export const ProductModal = () => {
               {/* Instant WhatsApp Concierge Button */}
               <button
                 onClick={handleInstantWhatsApp}
-                className="w-full py-3 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-xs font-semibold tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full min-h-12 px-3 py-2.5 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5 text-[#59492E]" />
                 <span>{t.instantOrderWhatsApp}</span>

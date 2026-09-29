@@ -31,8 +31,6 @@ export const WhatsAppCheckoutView = () =>
   const paymentLabels = {
     cod: 'الدفع عند الاستلام',
     instapay: 'إنستاباي',
-    valu: 'ValU بالتقسيط',
-    visa: 'فيزا / ماستركارد',
   };
 
   // Live Auto-Generated WhatsApp Message Text — Arabic receipt format
@@ -89,24 +87,24 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] py-8 sm:py-12">
+    <div className="min-h-screen bg-[#FAF8F5] py-6 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Navigation Breadcrumb & Online Indicator */ }
-        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#EAE5DC]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#EAE5DC]">
           <button
             onClick={ () =>
             {
               setCurrentView('home');
               setIsCartOpen(true);
             } }
-            className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#1A1A1A] hover:text-[#9A7B56] transition-colors cursor-pointer"
+            className="flex items-center gap-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#1A1A1A] hover:text-[#9A7B56] transition-colors cursor-pointer max-w-full"
           >
             { isRTL ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" /> }
-            <span>{ t.returnToBag }</span>
+            <span className="leading-snug">{ t.returnToBag }</span>
           </button>
 
-          <div className="flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-[#59492E]">
+          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-semibold tracking-widest uppercase text-[#59492E]">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>{ t.conciergeOnline }</span>
           </div>
@@ -117,7 +115,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
           <div className="inline-block px-3 py-1 rounded-full bg-[#EAE5DC] text-[10px] font-bold tracking-widest text-[#59492E] uppercase mb-3">
             { t.directDispatch }
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-3 leading-tight">
             { t.whatsappCheckoutTitle }
           </h1>
           <p className="text-xs sm:text-sm text-[#666666] leading-relaxed">
@@ -130,10 +128,10 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
           {/* Left Form: Express Order Routing */ }
           <div className="lg:col-span-7 space-y-6">
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#EAE5DC] shadow-xs space-y-6">
+            <div className="p-4 sm:p-8 rounded-3xl bg-white border border-[#EAE5DC] shadow-xs space-y-6">
 
               {/* Box Header */ }
-              <div className="flex items-center justify-between pb-4 border-b border-[#EAE5DC]">
+              <div className="flex items-start justify-between gap-3 pb-4 border-b border-[#EAE5DC]">
                 <div>
                   <h3 className="text-sm sm:text-base font-serif font-bold text-[#1A1A1A]">
                     { t.expressRouting }
@@ -142,7 +140,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                     { t.priorityFulfillment }
                   </span>
                 </div>
-                <span className="text-[10px] px-2.5 py-1 rounded-md bg-[#FAF8F5] border border-[#EAE5DC] text-[#777777] font-mono font-semibold">
+                <span className="shrink-0 text-[9px] sm:text-[10px] px-2 py-1 rounded-md bg-[#FAF8F5] border border-[#EAE5DC] text-[#777777] font-mono font-semibold">
                   { t.stepBadge }
                 </span>
               </div>
@@ -152,11 +150,13 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
                 {/* Full Name */ }
                 <div>
-                  <label className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
+                  <label htmlFor='full-name' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.recipientFullName }
                   </label>
                   <div className="relative">
                     <input
+                      id='full-name'
+                      name='full-name'
                       type="text"
                       value={ fullName }
                       onChange={ (e) => setFullName(e.target.value) }
@@ -169,7 +169,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
                 {/* WhatsApp Phone */ }
                 <div>
-                  <label className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
+                  <label htmlFor='phone-number' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.whatsappPhoneNumber }
                   </label>
                   <div className="flex items-center rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] overflow-hidden focus-within:border-[#59492E] transition-colors">
@@ -178,6 +178,8 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                       <span dir="ltr">+20</span>
                     </span>
                     <input
+                      id='phone-number'
+                      name='phone-number'
                       type="tel"
                       value={ phoneNumber }
                       onChange={ (e) => setPhoneNumber(e.target.value) }
@@ -193,10 +195,12 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
                 {/* Governorate / City */ }
                 <div>
-                  <label className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
+                  <label htmlFor='city' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     المحافظة / City
                   </label>
                   <select
+                    id='city'
+                    name='city'
                     value={ city }
                     onChange={ (e) => setCity(e.target.value) }
                     className="w-full  px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] text-xs sm:text-sm text-[#1A1A1A] focus:outline-none focus:border-[#59492E] transition-colors cursor-pointer"
@@ -224,11 +228,13 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
                 {/* Street Address */ }
                 <div>
-                  <label className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
+                  <label htmlFor='street-address' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.streetAddress }
                   </label>
                   <div className="relative">
                     <input
+                      id='street-address'
+                      name='street-address'
                       type="text"
                       value={ streetAddress }
                       onChange={ (e) => setStreetAddress(e.target.value) }
@@ -242,15 +248,17 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                 {/* Atelier Notes */ }
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase">
+                    <label htmlFor="atelier-notes" className="text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase">
                       { t.atelierNotes }
                     </label>
                     <span className="text-[10px] text-[#59492E] font-semibold">
                       { t.complimentaryBadge }
                     </span>
                   </div>
-                  <textarea
-                    rows={ 2 }
+                  <textarea 
+                    id="atelier-notes"
+                    name="notes"
+                    rows={ 1 }
                     value={ notes }
                     onChange={ (e) => setNotes(e.target.value) }
                     placeholder={ t.atelierNotesPlaceholder }
@@ -321,7 +329,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
               <button
                 id="send-whatsapp-order-cta"
                 onClick={ handleSendViaWhatsApp }
-                className="w-full py-4 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs sm:text-sm font-semibold tracking-widest uppercase flex items-center justify-center gap-3 transition-all cursor-pointer shadow-lg"
+                className="w-full min-h-12 px-3 py-3 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-[10px] sm:text-sm leading-tight font-semibold tracking-wide sm:tracking-widest uppercase flex items-center justify-center gap-2 sm:gap-3 transition-all cursor-pointer shadow-lg"
               >
                 <Send className="w-4 h-4 text-[#C5A880]" />
                 <span>{ t.sendOrderWhatsApp }</span>

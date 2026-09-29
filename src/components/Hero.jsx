@@ -9,11 +9,11 @@ export const Hero = () => {
   const isAr = language === 'ar';
 
   return (
-    <section className="luxury-fade-in relative overflow-hidden pt-8 pb-16 md:pt-14 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <section className="luxury-fade-in relative overflow-hidden pt-6 pb-12 sm:pt-8 sm:pb-16 md:pt-14 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
         
         {/* Left Typography & Hero Action */}
-        <div className="lg:col-span-7 space-y-8">
+        <div className="lg:col-span-7 space-y-6 sm:space-y-8">
           
           {/* Capsule pill */}
           <div className="inline-block px-3.5 py-1 rounded-full bg-[#EAE5DC] text-[10px] sm:text-xs font-semibold tracking-widest text-[#59492E] uppercase">
@@ -21,7 +21,7 @@ export const Hero = () => {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif text-[#1A1A1A] leading-[1.15] tracking-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif text-[#1A1A1A] leading-[1.15] tracking-tight">
             <span>{t.heroTitlePart1}</span>
             <span className="block italic text-[#9A7B56] font-normal font-serif">
               {t.heroTitlePart2}
@@ -34,23 +34,23 @@ export const Hero = () => {
           </p>
 
           {/* Buttons */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
             <button
               onClick={() => setCurrentView('catalog')}
-              className="px-7 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all shadow-md cursor-pointer"
+              className="px-6 sm:px-7 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all shadow-md cursor-pointer"
             >
               {t.exploreCollection}
             </button>
             <button
               onClick={() => setCurrentView('about')}
-              className="px-7 py-3.5 rounded-full border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer"
+              className="px-6 sm:px-7 py-3.5 rounded-full border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer"
             >
               {t.atelierEdit}
             </button>
           </div>
 
           {/* 3 Metric Columns */}
-          <div className="grid grid-cols-3 gap-6 pt-10 border-t border-[#EAE5DC]">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 pt-8 sm:pt-10 border-t border-[#EAE5DC]">
             {/* <div>
               <span className="text-lg sm:text-xl font-serif font-bold text-[#1A1A1A] block">
                 {t.stat1Number}

@@ -50,7 +50,7 @@ export const App = () => {
     : productsData.filter(p => p.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#1A1A1A] flex flex-col font-sans selection:bg-[#C5A880] selection:text-[#1A1A1A]">
+    <div className="min-h-screen overflow-x-hidden bg-[#FAF8F5] text-[#1A1A1A] flex flex-col font-sans selection:bg-[#C5A880] selection:text-[#1A1A1A]">
       {/* Header */}
       <Header />
 
