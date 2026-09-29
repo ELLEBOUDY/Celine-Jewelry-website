@@ -6,36 +6,10 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
     try {
-      const saved = localStorage.getItem('laura_cart');
-      return saved ? JSON.parse(saved) : [
-        // Initialize with default sample from user's items for instant showroom feel
-        {
-          product: {
-            id: 'laura-ring-solitaire',
-            nameEn: 'Solitaire Oval Brilliant Diamond Ring',
-            nameAr: 'خاتم سولتير بيضاوي بريليانت مع صفين بافيه',
-            price: 1850,
-            image: '/images/IMG_8174.JPG.jpeg',
-            materialEn: '18K Yellow Gold Vermeil',
-            materialAr: 'ذهب أصفر فيرميل عيار 18',
-            refCode: 'LAU-SOL-441'
-          },
-          quantity: 1
-        },
-        {
-          product: {
-            id: 'laura-baguette-full-set',
-            nameEn: 'Baguette Cut Radiance Trio Master Set',
-            nameAr: 'طقم الباجيت الماسي المتكامل (سلسلة + انسيال + خاتم)',
-            price: 3600,
-            image: '/images/IMG_8178.JPG.jpeg',
-            materialEn: '18K Gold Vermeil',
-            materialAr: 'ذهب أصفر فيرميل عيار 18',
-            refCode: 'LAU-BAG-092'
-          },
-          quantity: 1
-        }
-      ];
+      // Clear legacy sample cart if present
+      localStorage.removeItem('laura_cart');
+      const saved = localStorage.getItem('celine_cart');
+      return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
     }
@@ -45,11 +19,22 @@ export const CartProvider = ({ children }) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [currentView, setCurrentView] = useState('home'); // 'home' | 'catalog' | 'about' | 'checkout'
-  const [wishlist, setWishlist] = useState(['laura-ring-solitaire', 'laura-swan-necklace']);
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('celine_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   useEffect(() => {
-    localStorage.setItem('laura_cart', JSON.stringify(cart));
+    localStorage.setItem('celine_cart', JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('celine_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
 
   const addToCart = (product, quantity = 1) => {
     setCart(prev => {

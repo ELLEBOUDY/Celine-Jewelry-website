@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import { SpeedInsights } from '@vercel/speed-insights/react';
+// import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useLanguage } from './context/LanguageContext.jsx';
 import { useCart } from './context/CartContext.jsx';
 import { Header } from './components/Header.jsx';
@@ -114,7 +114,7 @@ export const App = () => {
       <ProductModal />
 
       {/* Speed Insights */}
-      <SpeedInsights />
+      {/* <SpeedInsights /> */}
     </div>
   );
 };
