@@ -72,12 +72,6 @@ export const App = () => {
           /* Home View */
           <>
             <Hero />
-            
-            {/* Category Filter Bar */}
-            {/* <CategoryBar
-              activeCategory={activeCategory}
-              onSelectCategory={setActiveCategory}
-            /> */}
 
             {/* Curated Best-Sellers Grid matching Figma Home */}
             <section className="luxury-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -114,7 +108,7 @@ export const App = () => {
       <ProductModal />
 
       {/* Speed Insights */}
-      <SpeedInsights />
+      <SpeedInsights /> 
     </div>
   );
 };
