@@ -21,7 +21,7 @@
 
 **CELINE JEWELRY** is a premium, bilingual (Arabic 🇪🇬 / English 🇬🇧) jewelry e-commerce website built for the Egyptian market. The platform delivers a full luxury shopping experience — from curated product browsing to a WhatsApp-based checkout concierge — designed to feel as refined as the jewelry it sells.
 
-The site combines modern web aesthetics with deep RTL/LTR language support, smooth scroll animations, a persistent cart system, and a direct WhatsApp order flow — making it ideal for boutique jewelry brands operating in Egypt and the MENA region.
+The site combines modern web aesthetics with deep RTL/LTR language support, smooth scroll animations, a persistent cart system, color variant selection, image carousels, and a direct WhatsApp order flow — making it ideal for boutique jewelry brands operating in Egypt and the MENA region.
 
 ---
 
@@ -33,8 +33,10 @@ The site combines modern web aesthetics with deep RTL/LTR language support, smoo
 | 🛒 **Persistent Cart** | Cart state preserved across views with live quantity management |
 | 💬 **WhatsApp Checkout** | Orders sent directly to the atelier via a formatted WhatsApp message |
 | 🔍 **Catalog Search & Filter** | Real-time search + category filtering across all collections |
-| 🖼️ **Product Modal** | Rich product detail overlays with image, description, and add-to-cart |
-| 🎨 **Smooth Animations** | Lenis smooth scroll + CSS micro-animations throughout |
+| 🖼️ **Image Carousel** | Multi-image carousel in product detail modals with swipe & keyboard support |
+| 🎨 **Color Variant Swatches** | Circular color picker for products with multiple color options |
+| 🧾 **Color in Order Summary** | Selected color variant shown in cart drawer & WhatsApp message |
+| ✨ **Smooth Animations** | Lenis smooth scroll + CSS micro-animations throughout |
 | 🎉 **Confetti on Order** | Canvas-confetti celebration on successful order submission |
 | 📱 **Fully Responsive** | Mobile-first design optimized for all screen sizes |
 | 🌙 **Luxury Dark Aesthetic** | Premium dark gold palette with glassmorphism UI elements |
@@ -62,6 +64,7 @@ Language            →  JavaScript (ESM)
 Celine Jewelry website/
 │
 ├── public/                      # Static assets (logo, favicon, images)
+│   └── images/                  # Product images & color variant crops
 │
 ├── src/
 │   ├── components/              # UI Components
@@ -69,9 +72,9 @@ Celine Jewelry website/
 │   │   ├── Hero.jsx             # Full-screen hero section with CTA
 │   │   ├── CategoryBar.jsx      # Horizontal scrollable category filter bar
 │   │   ├── ProductCard.jsx      # Individual product card with hover effects
-│   │   ├── ProductModal.jsx     # Full-screen product detail modal
+│   │   ├── ProductModal.jsx     # Product detail modal with carousel & color swatches
 │   │   ├── CatalogView.jsx      # Filterable & searchable product grid
-│   │   ├── CartDrawer.jsx       # Slide-in shopping cart drawer
+│   │   ├── CartDrawer.jsx       # Slide-in shopping cart drawer with color info
 │   │   ├── WhatsAppCheckoutView.jsx  # Multi-step checkout → WhatsApp order
 │   │   ├── CraftsmanshipSection.jsx  # Brand story / artisan section
 │   │   ├── ValueBanners.jsx     # Value proposition banners
@@ -79,11 +82,11 @@ Celine Jewelry website/
 │   │   └── Footer.jsx           # Site footer with links & social
 │   │
 │   ├── context/
-│   │   ├── CartContext.jsx      # Global cart state (add, remove, quantity, total)
+│   │   ├── CartContext.jsx      # Global cart state (add, remove, quantity, color, total)
 │   │   └── LanguageContext.jsx  # Global language state (AR / EN toggle)
 │   │
 │   ├── data/
-│   │   └── products.js          # Product catalog data (name, price, category, images)
+│   │   └── products.js          # Product catalog (name, price, category, images, colors)
 │   │
 │   ├── locales/
 │   │   └── translations.js      # All UI strings in Arabic & English
@@ -114,7 +117,7 @@ Make sure you have the following installed:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/Celine-Jewelry-website.git
+git clone https://github.com/ELLEBOUDY/Celine-Jewelry-website.git
 
 # 2. Navigate into the project folder
 cd "Celine Jewelry website"
@@ -151,17 +154,78 @@ All strings are centralized in `src/locales/translations.js`. To add or edit any
 
 ---
 
+## 🖼️ Product Image Carousel
+
+Each product modal supports a **multi-image carousel** with:
+
+- **Arrow navigation** (prev / next buttons)
+- **Dot indicators** to jump to any image
+- **Thumbnail strip** at the bottom for quick access
+- **Swipe gestures** on mobile (touch support)
+- **Keyboard navigation** — `←` / `→` arrow keys
+
+All images for a product are defined in the `images` array inside `src/data/products.js`.
+
+---
+
+## 🎨 Color Variant Swatches
+
+Products that come in multiple colors (e.g. the *Celestial Swan Pendant*) display circular color swatch pickers directly in the product modal:
+
+- Each swatch shows the color via its hex code
+- A ✓ checkmark appears on the currently selected color
+- Selecting a color updates the carousel to that variant's image
+- The selected color name (AR / EN) is shown as a badge above the swatches
+- The chosen color is saved in cart state and appears in:
+  - 🛒 The **Cart Drawer** (color swatch + name next to the item)
+  - 📲 The **WhatsApp order message** sent to the atelier
+
+### Adding Color Variants to a Product
+
+In `src/data/products.js`, add a `colors` array to any product:
+
+```js
+colors: [
+  { id: 'white',  nameEn: 'Crystal White',  nameAr: 'أبيض كريستال',   hex: '#FFFFFF' },
+  { id: 'purple', nameEn: 'Amethyst Purple', nameAr: 'بنفسجي أميثست', hex: '#8C62A8' },
+  { id: 'pink',   nameEn: 'Rose Pink',       nameAr: 'وردي روز',       hex: '#DE8DA0' },
+  { id: 'black',  nameEn: 'Midnight Black',  nameAr: 'أسود ملكي',      hex: '#1A1A1A' },
+]
+```
+
+Each color entry requires only `id`, `nameEn`, `nameAr`, and `hex`. The color swatch is rendered purely from the hex value — no separate image needed per color.
+
+---
+
 ## 💬 WhatsApp Checkout Flow
 
 CELINE JEWELRY uses a **WhatsApp-first checkout** model:
 
-1. Customer adds items to cart
-2. Proceeds to checkout form (name, phone, governorate, address)
-3. Selects payment method (Cash on Delivery / Instapay)
-4. Clicks **"Send Order via WhatsApp Concierge"**
-5. A pre-formatted Arabic order message is sent directly to the atelier's WhatsApp
+1. Customer browses catalog & selects a product (+ color if applicable)
+2. Adds item to cart — color variant is preserved per item
+3. Proceeds to checkout form (name, phone, governorate, address)
+4. Selects payment method (Cash on Delivery / Instapay)
+5. Clicks **"Send Order via WhatsApp Concierge"**
+6. A pre-formatted Arabic order message (including chosen color) is sent to the atelier's WhatsApp
 
 This removes friction for Egyptian customers who prefer WhatsApp-based shopping.
+
+---
+
+## 🗂️ Product Catalog
+
+The catalog currently includes the following collections:
+
+| Category | Items |
+|---|---|
+| 💍 **Bespoke Rings** | Tiara stack ring set |
+| 📿 **Chains & Necklaces** | Celestial Swan Pendant (4 colors), Magnetic Clover, Gold Ingot Bar |
+| 💪 **Bangles & Bracelets** | Baguette Tennis & Ring Duo |
+| 🎁 **Atelier Sets** | CD Chain Duo, Enta Omri Trio, Wheat Ear Trio, Deer Antlers Duo |
+
+> The **home page** shows the first **3** products as a curated preview with an "Explore Full Collection" button linking to the full catalog.
+
+To add a new product, append a new object to the array in `src/data/products.js`.
 
 ---
 
@@ -173,6 +237,7 @@ This removes friction for Egyptian customers who prefer WhatsApp-based shopping.
 | Deep Charcoal | `#1A1A1A` |
 | Warm Beige | `#F5F0E8` |
 | Warm Stone | `#D5CEC0` |
+| Accent Brown | `#59492E` |
 
 ---
 
