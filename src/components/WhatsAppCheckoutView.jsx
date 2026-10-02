@@ -41,9 +41,12 @@ export const WhatsAppCheckoutView = () =>
     const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
 
     const itemsList = cart
-      .map((it, idx) =>
-        `${idx + 1}. ${it.product.nameAr || it.product.nameEn} (الكمية: ${it.quantity}) - السعر: ${(it.product.price * it.quantity).toLocaleString('ar-EG')} ج.م`
-      )
+      .map((it, idx) => {
+        const colorLabel = it.selectedColor
+          ? ` [اللون: ${it.selectedColor.nameAr || it.selectedColor.nameEn}]`
+          : '';
+        return `${idx + 1}. ${it.product.nameAr || it.product.nameEn}${colorLabel} (الكمية: ${it.quantity}) - السعر: ${(it.product.price * it.quantity).toLocaleString('ar-EG')} ج.م`;
+      })
       .join('\n');
 
     return `✨ طلب جديد من متجر CELINE JEWELRY ✨
@@ -378,7 +381,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                   const material = isAr ? item.product.materialAr : item.product.materialEn;
 
                   return (
-                    <div key={ item.product.id } className="pt-3 first:pt-0 flex items-center justify-between">
+                    <div key={ item.cartItemId || item.product.id } className="pt-3 first:pt-0 flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <img
                           loading="lazy"
@@ -391,6 +394,17 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                           <h4 className="text-xs font-serif font-bold text-[#1A1A1A] line-clamp-1">
                             { name }
                           </h4>
+                          {item.selectedColor && (
+                            <div className="flex items-center gap-1.5 my-0.5">
+                              <span 
+                                className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0" 
+                                style={{ backgroundColor: item.selectedColor.hex }}
+                              />
+                              <span className="text-[10px] text-[#59492E] font-semibold">
+                                {isAr ? `اللون: ${item.selectedColor.nameAr}` : `Color: ${item.selectedColor.nameEn}`}
+                              </span>
+                            </div>
+                          )}
                           <span className="text-[10px] text-[#777777] block">
                             { material } • Qty { item.quantity }
                           </span>

@@ -29,7 +29,7 @@ const TikTokIcon = ({ className }) => (
 // Replace these placeholder URLs with the brand's actual social profiles.
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/karem.mhomed', Icon: FacebookIcon },
-  { label: 'Instagram', href: 'https://www.instagram.com/your-page', Icon: InstagramIcon },
+  { label: 'Instagram', href: 'https://www.instagram.com/celine__accesories_?stkn=MXd1NnpubjVoemJxaQ%3D%3D&utm_source=qr', Icon: InstagramIcon },
   { label: 'TikTok', href: 'https://www.tiktok.com/@celine.accessories', Icon: TikTokIcon },
 ];
 
@@ -89,11 +89,12 @@ export const Footer = () => {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-full bg-[#262626] border border-white/10 flex items-center justify-center text-[#C5A880] hover:bg-[#C5A880] hover:text-[#1A1A1A] transition-colors"
+                  className="w-9 h-9 rounded-full bg-[#262626] border border-white/10 items-center justify-center flex text-[#C5A880] hover:bg-[#C5A880] hover:text-[#1A1A1A] transition-colors"
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4"/>
                 </a>
               ))}
+
             </div>
           </div>
 

@@ -17,7 +17,7 @@ import { productsData } from './data/products.js';
 
 export const App = () => {
   const { t } = useLanguage();
-  const { currentView } = useCart();
+  const { currentView, setCurrentView } = useCart();
   const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export const App = () => {
           <>
             <Hero />
 
-            {/* Curated Best-Sellers Grid matching Figma Home */}
+            {/* Curated Best-Sellers Grid */}
             <section className="luxury-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
               <div className="mb-8">
                 <span className="text-[10px] font-mono tracking-widest text-[#777777] uppercase block mb-1">
@@ -86,6 +86,19 @@ export const App = () => {
                 {filteredHomeProducts.slice(0, 3).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
+              </div>
+
+              {/* View Full Collection Button */}
+              <div className="mt-10 text-center">
+                <button
+                  onClick={() => {
+                    setCurrentView('catalog');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer hover:scale-105"
+                >
+                  {t.exploreCollection} ({productsData.length})
+                </button>
               </div>
             </section>
 

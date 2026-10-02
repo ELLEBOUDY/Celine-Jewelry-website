@@ -36,33 +36,40 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('celine_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const addToCart = (product, quantity = 1) => {
+  const addToCart = (product, quantity = 1, selectedColor = null) => {
+    const chosenColor = selectedColor || (product.colors?.[0] || null);
+    const cartItemId = `${product.id}_${chosenColor?.id || 'default'}`;
+
     setCart(prev => {
-      const existing = prev.find(item => item.product.id === product.id);
+      const existing = prev.find(item => (item.cartItemId || item.product.id) === cartItemId);
       if (existing) {
         return prev.map(item =>
-          item.product.id === product.id
+          (item.cartItemId || item.product.id) === cartItemId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { cartItemId, product, quantity, selectedColor: chosenColor }];
     });
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId) => {
-    setCart(prev => prev.filter(item => item.product.id !== productId));
+  const removeFromCart = (idOrCartItemId) => {
+    setCart(prev => prev.filter(item => 
+      item.cartItemId !== idOrCartItemId && item.product.id !== idOrCartItemId
+    ));
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const updateQuantity = (idOrCartItemId, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(idOrCartItemId);
       return;
     }
     setCart(prev =>
       prev.map(item =>
-        item.product.id === productId ? { ...item, quantity } : item
+        (item.cartItemId === idOrCartItemId || item.product.id === idOrCartItemId)
+          ? { ...item, quantity }
+          : item
       )
     );
   };

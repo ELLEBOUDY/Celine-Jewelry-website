@@ -84,7 +84,7 @@ export const CartDrawer = () => {
 
                 return (
                   <div
-                    key={item.product.id}
+                    key={item.cartItemId || item.product.id}
                     className="p-3 sm:p-3.5 rounded-2xl bg-[#F5F2EB] border border-[#EAE5DC] flex items-center gap-3 sm:gap-4"
                   >
                     <img
@@ -99,6 +99,17 @@ export const CartDrawer = () => {
                       <h4 className="text-xs sm:text-sm font-serif font-bold text-[#1A1A1A] truncate mb-0.5">
                         {name}
                       </h4>
+                      {item.selectedColor && (
+                        <div className="flex items-center gap-1.5 mt-0.5 mb-1">
+                          <span 
+                            className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0" 
+                            style={{ backgroundColor: item.selectedColor.hex }}
+                          />
+                          <span className="text-[10px] text-[#59492E] font-semibold">
+                            {isAr ? `اللون: ${item.selectedColor.nameAr}` : `Color: ${item.selectedColor.nameEn}`}
+                          </span>
+                        </div>
+                      )}
                       <p className="text-[10px] sm:text-[11px] text-[#777777] truncate mb-2">
                         {material} • {item.quantity} {t.itemsCount}
                       </p>
@@ -106,7 +117,7 @@ export const CartDrawer = () => {
                       <div className="flex items-center gap-2 sm:gap-3">
                         <div className="flex items-center border border-[#D5CEC0] rounded-lg bg-white">
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() => updateQuantity(item.cartItemId || item.product.id, item.quantity - 1)}
                             className="p-1 hover:text-[#59492E] text-[#777777] transition-colors cursor-pointer"
                             aria-label="Decrease quantity"
                           >
@@ -114,7 +125,7 @@ export const CartDrawer = () => {
                           </button>
                           <span className="px-2 text-xs font-bold text-[#1A1A1A]">{item.quantity}</span>
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.cartItemId || item.product.id, item.quantity + 1)}
                             className="p-1 hover:text-[#59492E] text-[#777777] transition-colors cursor-pointer"
                             aria-label="Increase quantity"
                           >
@@ -123,7 +134,7 @@ export const CartDrawer = () => {
                         </div>
 
                         <button
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() => removeFromCart(item.cartItemId || item.product.id)}
                           className="text-[#999999] hover:text-rose-600 transition-colors p-1 cursor-pointer"
                           aria-label="Remove item"
                         >
