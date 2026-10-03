@@ -21,12 +21,54 @@ export const WhatsAppCheckoutView = () =>
   // Generate a unique order number once per session
   const [ orderNumber ] = useState(() => 'CELINE-' + Math.floor(10000 + Math.random() * 90000));
   const [ fullName, setFullName ] = useState('');
+  const [ fullNameError, setFullNameError ] = useState('');
   const [ phoneNumber, setPhoneNumber ] = useState('');
+  const [ phoneError, setPhoneError ] = useState('');
   const [ city, setCity ] = useState('القاهرة (Cairo)');
   const [ streetAddress, setStreetAddress ] = useState('');
+  const [ addressError, setAddressError ] = useState('');
   const [ notes, setNotes ] = useState('');
   const [ selectedPayment, setSelectedPayment ] = useState('cod');
   const [ orderPlaced, setOrderPlaced ] = useState(false);
+
+  // Validate form fields upon clicking "Send Order"
+  const validateForm = () => {
+    let isValid = true;
+
+    // Validate Full Name
+    if (!fullName.trim()) {
+      setFullNameError(isAr ? 'الرجاء إدخال الاسم بالكامل' : 'Please enter your full name');
+      isValid = false;
+    } else {
+      setFullNameError('');
+    }
+
+    // Validate Phone Number
+    const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
+    if (cleanPhone.length !== 11) {
+      if (cleanPhone.length >= 3 && !/^(010|011|012|015)/.test(cleanPhone)) {
+        setPhoneError(isAr ? 'الرجاء البدء بـ 010 أو 011 أو 012 أو 015' : 'Phone number must start with 010, 011, 012, or 015');
+      } else {
+        setPhoneError(isAr ? 'أرجو إدخال 11 رقمًا' : 'Please enter an 11-digit phone number');
+      }
+      isValid = false;
+    } else if (!/^(010|011|012|015)/.test(cleanPhone)) {
+      setPhoneError(isAr ? 'الرجاء البدء بـ 010 أو 011 أو 012 أو 015' : 'Phone number must start with 010, 011, 012, or 015');
+      isValid = false;
+    } else {
+      setPhoneError('');
+    }
+
+    // Validate Street Address
+    if (!streetAddress.trim()) {
+      setAddressError(isAr ? 'الرجاء إدخال العنوان بالتفصيل' : 'Please enter your street address');
+      isValid = false;
+    } else {
+      setAddressError('');
+    }
+
+    return isValid;
+  };
 
   const paymentLabels = {
     cod: 'الدفع عند الاستلام',
@@ -75,6 +117,10 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 
   const handleSendViaWhatsApp = () =>
   {
+    if (!validateForm()) {
+      return;
+    }
+
     trackEvent('send_whatsapp_order', {
       source: 'checkout',
       item_count: cart.reduce((total, item) => total + item.quantity, 0),
@@ -83,7 +129,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
     });
     triggerConfetti();
     setOrderPlaced(true);
-    const storeWhatsAppNumber = "201126110951"; // Can be replaced by the store owner's WhatsApp number
+    const storeWhatsAppNumber = "201028619308"; // Store owner's WhatsApp number
     const encoded = encodeURIComponent(formatWhatsAppMessage());
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${storeWhatsAppNumber}&text=${encoded}`;
     window.open(whatsappUrl, '_blank');
@@ -156,26 +202,38 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                   <label htmlFor='full-name' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.recipientFullName }
                   </label>
-                  <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${
+                    fullNameError ? 'border-red-400 focus-within:border-red-500' : 'border-[#D5CEC0] focus-within:border-[#59492E]'
+                  }`}>
                     <input
                       id='full-name'
                       name='full-name'
                       type="text"
                       value={ fullName }
-                      onChange={ (e) => setFullName(e.target.value) }
+                      onChange={ (e) => {
+                        setFullName(e.target.value);
+                        if (fullNameError) setFullNameError('');
+                      }}
                       placeholder={ t.recipientPlaceholder }
-                      className="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] text-xs sm:text-sm text-[#1A1A1A] focus:outline-none focus:border-[#59492E] transition-colors"
+                      className="w-full px-4 py-3 bg-[#FAF8F5] rounded-xl text-xs sm:text-sm text-[#1A1A1A] focus:outline-none"
                     />
                     <User className="w-4 h-4 text-[#888888] absolute top-1/2 -translate-y-1/2 end-3.5 pointer-events-none" />
                   </div>
+                  {fullNameError && (
+                    <span className="text-[10px] text-red-500 font-semibold block mt-1">
+                      ⚠ {fullNameError}
+                    </span>
+                  )}
                 </div>
 
-                {/* WhatsApp Phone */ }
+                 {/* WhatsApp Phone */}
                 <div>
                   <label htmlFor='phone-number' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.whatsappPhoneNumber }
                   </label>
-                  <div className="flex items-center rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] overflow-hidden focus-within:border-[#59492E] transition-colors">
+                  <div className={`flex items-center rounded-xl bg-[#FAF8F5] border overflow-hidden transition-colors ${
+                    phoneError ? 'border-red-400 focus-within:border-red-500' : 'border-[#D5CEC0] focus-within:border-[#59492E]'
+                  }`}>
                     <span className="px-3.5 py-3 text-xs font-semibold text-[#555555] border-e border-[#D5CEC0] bg-[#F2EDE4] flex items-center gap-1">
                       <span>🇪🇬</span>
                       <span dir="ltr">+20</span>
@@ -184,17 +242,30 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                       id='phone-number'
                       name='phone-number'
                       type="tel"
+                      inputMode="numeric"
+                      maxLength={11}
                       value={ phoneNumber }
-                      onChange={ (e) => setPhoneNumber(e.target.value) }
-                      placeholder={ t.whatsappPhonePlaceholder }
+                      onChange={ (e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        setPhoneNumber(val);
+                        if (phoneError) setPhoneError('');
+                      }}
+                      placeholder={ t.whatsappPhonePlaceholder || '01XXXXXXXXX' }
                       className="w-full px-4 py-3 bg-transparent text-xs sm:text-sm text-[#1A1A1A] focus:outline-none"
                     />
                     <Phone className="w-4 h-4 text-[#888888] me-3.5 shrink-0 pointer-events-none" />
                   </div>
-                  <span className="text-[10px] text-[#777777] block mt-1">
-                    { t.phoneTrackingHint }
-                  </span>
+                  {phoneError ? (
+                    <span className="text-[10px] text-red-500 font-semibold block mt-1">
+                      ⚠ {phoneError}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-[#777777] block mt-1">
+                      { t.phoneTrackingHint }
+                    </span>
+                  )}
                 </div>
+
 
                 {/* Governorate / City */ }
                 <div>
@@ -234,18 +305,28 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                   <label htmlFor='street-address' className="block text-[11px] font-bold tracking-wider text-[#1A1A1A] uppercase mb-1.5">
                     { t.streetAddress }
                   </label>
-                  <div className="relative">
+                  <div className={`relative rounded-xl border transition-colors ${
+                    addressError ? 'border-red-400 focus-within:border-red-500' : 'border-[#D5CEC0] focus-within:border-[#59492E]'
+                  }`}>
                     <input
                       id='street-address'
                       name='street-address'
                       type="text"
                       value={ streetAddress }
-                      onChange={ (e) => setStreetAddress(e.target.value) }
+                      onChange={ (e) => {
+                        setStreetAddress(e.target.value);
+                        if (addressError) setAddressError('');
+                      }}
                       placeholder={ t.streetPlaceholder }
-                      className="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] text-xs sm:text-sm text-[#1A1A1A] focus:outline-none focus:border-[#59492E] transition-colors"
+                      className="w-full px-4 py-3 bg-[#FAF8F5] rounded-xl text-xs sm:text-sm text-[#1A1A1A] focus:outline-none"
                     />
                     <MapPin className="w-4 h-4 text-[#888888] absolute top-1/2 -translate-y-1/2 end-3.5 pointer-events-none" />
                   </div>
+                  {addressError && (
+                    <span className="text-[10px] text-red-500 font-semibold block mt-1">
+                      ⚠ {addressError}
+                    </span>
+                  )}
                 </div>
 
                 {/* Atelier Notes */ }
@@ -328,16 +409,23 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                 </div>
               </div>
 
-              {/* Big Dark Pill Submit CTA */ }
+              {/* Big Dark Pill Submit CTA */}
               <button
                 id="send-whatsapp-order-cta"
+                type="button"
                 onClick={ handleSendViaWhatsApp }
-                className="w-full min-h-12 px-3 py-3 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-[10px] sm:text-sm leading-tight font-semibold tracking-wide sm:tracking-widest uppercase flex items-center justify-center gap-2 sm:gap-3 transition-all cursor-pointer shadow-lg"
+                disabled={ cart.length === 0 }
+                className={`w-full min-h-12 px-3 py-3 rounded-full text-[10px] sm:text-sm leading-tight font-semibold tracking-wide sm:tracking-widest uppercase flex items-center justify-center gap-2 sm:gap-3 transition-all shadow-lg ${
+                  cart.length > 0
+                    ? 'bg-[#1A1A1A] hover:bg-[#333333] active:scale-[0.99] text-white cursor-pointer'
+                    : 'bg-[#CCCCCC] text-[#888888] cursor-not-allowed'
+                }`}
               >
-                <Send className="w-4 h-4 text-[#C5A880]" />
+                <Send className={`w-4 h-4 ${cart.length > 0 ? 'text-[#C5A880]' : 'text-[#AAAAAA]'}`} />
                 <span>{ t.sendOrderWhatsApp }</span>
                 { isRTL ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" /> }
               </button>
+
 
             </div>
 
@@ -441,7 +529,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                     <span>{ t.totalDue }</span>
                     <span className="text-[9px] font-sans text-[#888888] font-normal block">{ t.taxesInclusive }</span>
                   </div>
-                  <span className="text-xl text-[#1A1A1A]">{ t.currency }{ total.toLocaleString() }</span>
+                  <span className="text-lg font-bold text-[#1A1A1A]">{ t.currency }{ total.toLocaleString() }</span>
                 </div>
               </div>
 

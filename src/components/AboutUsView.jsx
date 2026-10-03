@@ -11,7 +11,7 @@ export const AboutUsView = () => {
   const handleOpenWhatsApp = () => {
     trackEvent('click_whatsapp', { source: 'about_us' });
     const message = encodeURIComponent('مرحباً، أود الاستفسار عن مجوهراتكم');
-    window.open(`https://api.whatsapp.com/send?phone=201126110951&text=${message}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://api.whatsapp.com/send?phone=201028619308&text=${message}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
