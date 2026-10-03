@@ -38,19 +38,32 @@ export const ProductModal = () => {
     : (quickViewProduct?.image ? [quickViewProduct.image] : []);
   const hasMultipleImages = images.length > 1;
 
+  const handleSelectImageIndex = (idx) => {
+    setActiveImageIndex(idx);
+    const targetImage = images[idx];
+    if (targetImage && quickViewProduct?.colors) {
+      const matchedColor = quickViewProduct.colors.find(c => c.image === targetImage);
+      if (matchedColor) {
+        setSelectedColor(matchedColor);
+      }
+    }
+  };
+
   // Keyboard navigation for image carousel
   useEffect(() => {
     if (!quickViewProduct || !hasMultipleImages) return;
     const handleKeyDown = (e) => {
       if (e.key === 'ArrowLeft') {
-        setActiveImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+        const nextIdx = activeImageIndex === 0 ? images.length - 1 : activeImageIndex - 1;
+        handleSelectImageIndex(nextIdx);
       } else if (e.key === 'ArrowRight') {
-        setActiveImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+        const nextIdx = activeImageIndex === images.length - 1 ? 0 : activeImageIndex + 1;
+        handleSelectImageIndex(nextIdx);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [quickViewProduct, hasMultipleImages, images.length]);
+  }, [quickViewProduct, hasMultipleImages, images, activeImageIndex]);
 
   if (!quickViewProduct) return null;
 
@@ -60,12 +73,14 @@ export const ProductModal = () => {
 
   const handlePrevImage = (e) => {
     if (e) e.stopPropagation();
-    setActiveImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    const nextIdx = activeImageIndex === 0 ? images.length - 1 : activeImageIndex - 1;
+    handleSelectImageIndex(nextIdx);
   };
 
   const handleNextImage = (e) => {
     if (e) e.stopPropagation();
-    setActiveImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    const nextIdx = activeImageIndex === images.length - 1 ? 0 : activeImageIndex + 1;
+    handleSelectImageIndex(nextIdx);
   };
 
   const minSwipeDistance = 45;
@@ -177,7 +192,7 @@ export const ProductModal = () => {
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setActiveImageIndex(idx);
+                          handleSelectImageIndex(idx);
                         }}
                         className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                           activeImageIndex === idx ? 'w-5 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/80'
@@ -197,7 +212,7 @@ export const ProductModal = () => {
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setActiveImageIndex(idx)}
+                    onClick={() => handleSelectImageIndex(idx)}
                     className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
                       activeImageIndex === idx
                         ? 'border-[#59492E] ring-2 ring-[#59492E]/30 scale-105 shadow-sm opacity-100'

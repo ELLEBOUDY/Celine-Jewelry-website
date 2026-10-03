@@ -234,8 +234,15 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                   <div className={`flex items-center rounded-xl bg-[#FAF8F5] border overflow-hidden transition-colors ${
                     phoneError ? 'border-red-400 focus-within:border-red-500' : 'border-[#D5CEC0] focus-within:border-[#59492E]'
                   }`}>
-                    <span className="px-3.5 py-3 text-xs font-semibold text-[#555555] border-e border-[#D5CEC0] bg-[#F2EDE4] flex items-center gap-1">
-                      <span>🇪🇬</span>
+                    <span className="px-3.5 py-3 text-xs font-semibold text-[#555555] border-e border-[#D5CEC0] bg-[#F2EDE4] flex items-center gap-1.5">
+                      <img
+                        src="https://flagcdn.com/w20/eg.png"
+                        srcSet="https://flagcdn.com/w40/eg.png 2x"
+                        width="20"
+                        height="15"
+                        alt="Egypt"
+                        className="rounded-sm object-cover shrink-0"
+                      />
                       <span dir="ltr">+20</span>
                     </span>
                     <input
@@ -474,7 +481,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
                         <img
                           loading="lazy"
                           decoding="async"
-                          src={ item.product.image }
+                          src={ item.selectedColor?.image || item.product.image }
                           alt={ name }
                           className="w-14 h-14 object-cover rounded-xl border border-[#EAE5DC] shrink-0"
                         />

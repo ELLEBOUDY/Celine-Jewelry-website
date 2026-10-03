@@ -234,5 +234,33 @@ export const productsData = [
     refCode: 'LAU-SET-05',
     descriptionEn: 'An enchanting silhouette inspired by the grace of deer antlers, featuring geometric crystal branches across a slender necklace and matching bracelet.',
     descriptionAr: 'تصميم عصري مستوحى من رشاقة قرون الغزال محلى بفصوص كريستالية هندسية متلألئة، يجمع بين سلسلة ناعمة وانسيال مطابق لإطلالة ساحرة.'
-  }
+  },
+  {
+    id: 'laura-swan-set',
+    nameEn: 'Swan Design Jewelry Set (Necklace + Bracelet + Ring)',
+    nameAr: 'طقم مجوهرات بتصميم بجعة (سلسلة+انسيال+خاتم)',
+    category: 'sets',
+    categoryLabelEn: 'Atelier Sets',
+    categoryLabelAr: 'أطقم الأتيليه',
+    price: 500,
+    originalPrice: 700,
+    image: '/images/swan-set-white.png',
+    images: [
+      '/images/swan-set-white.png',
+      '/images/swan-set-purple.png',
+      '/images/swan-set-pink.png'
+    ],
+    colors: [
+      { id: 'white', nameEn: 'Crystal White', nameAr: 'أبيض كريستال', hex: '#FFFFFF', border: '#D5CEC0', image: '/images/swan-set-white.png' },
+      { id: 'purple', nameEn: 'Amethyst Purple', nameAr: 'بنفسجي أميثست', hex: '#8C62A8', image: '/images/swan-set-purple.png' },
+      { id: 'pink', nameEn: 'Rose Pink', nameAr: 'وردي روز', hex: '#DE8DA0', image: '/images/swan-set-pink.png' }
+    ],
+    badge: 'SIGNATURE',
+    badgeAr: 'بصمة حصرية',
+    inStock: true,
+    refCode: 'LAU-SET-06',
+    descriptionEn: 'Graceful swan silhouette adorned with layered marquise cut stones that cascade like feathers, capturing ambient candlelight and sunshine. Available in breathtaking color variations.',
+    descriptionAr: 'تصميم فني لبجعة رشيقة مكسوة بطبقات من أحجار الماركيز الكريستالية التي تلتقط الضوء في كل حركة لتضفي أنوثة طاغية، متوفرة بتشكيلة ألوان ساحرة تناسب جميع إطلالاتك.'
+  },
+
 ];

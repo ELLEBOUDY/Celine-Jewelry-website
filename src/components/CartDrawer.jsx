@@ -90,7 +90,7 @@ export const CartDrawer = () => {
                     <img
                       loading="lazy"
                       decoding="async"
-                      src={item.product.image}
+                      src={item.selectedColor?.image || item.product.image}
                       alt={name}
                       className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl border border-white/60 shrink-0"
                     />
