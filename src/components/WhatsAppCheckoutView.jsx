@@ -13,7 +13,8 @@ export const WhatsAppCheckoutView = () =>
     total,
     setCurrentView,
     setIsCartOpen,
-    triggerConfetti
+    triggerConfetti,
+    clearCart
   } = useCart();
 
   const isAr = language === 'ar';
@@ -133,6 +134,8 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
     const encoded = encodeURIComponent(formatWhatsAppMessage());
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${storeWhatsAppNumber}&text=${encoded}`;
     window.open(whatsappUrl, '_blank');
+    // Clear the cart after successful order
+    clearCart();
   };
 
   return (
