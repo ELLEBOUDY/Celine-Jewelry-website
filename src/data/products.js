@@ -165,9 +165,9 @@ export const productsData = [
     categoryLabelAr: 'سلاسل وأعقاد',
     price: 300,
     originalPrice: 450,
-    image: '/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
+    image: './public/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
     images: [
-      '/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
+      './public/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
       '/images/gold-bar-necklace.jpg',
     ],
     badge: 'CLASSIC',
