@@ -57,8 +57,8 @@ export const productsData = [
   // },
   {
     id: 'laura-baguette-wrist-set',
-    nameEn: 'Atelier Baguette Tennis Bracelet & Ring Duo',
-    nameAr: 'دويتو انسيال وخاتم الباجيت الماسي للسهرة',
+    nameEn: 'Lazurde Jewelry Set (Necklace + Adjustable Bracelet + Ring)',
+    nameAr: 'طقم لازوردي (سلسلة + انسيال شدات + خاتم)',
     category: 'bracelets',
     categoryLabelEn: 'Bangles & Bracelets',
     categoryLabelAr: 'غوايش وأساور',
@@ -166,9 +166,9 @@ export const productsData = [
     categoryLabelAr: 'سلاسل وأعقاد',
     price: 300,
     originalPrice: 450,
-    image: './public/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
+    image: '/images/gold-bar-pendant.png',
     images: [
-      './public/images/15475be2-4d9e-4c4d-9aa1-14dd69b9bba6.png',
+      '/images/gold-bar-pendant.png',
       '/images/gold-bar-necklace.jpg',
     ],
     badge: 'CLASSIC',
