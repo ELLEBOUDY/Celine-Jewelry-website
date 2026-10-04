@@ -171,3 +171,25 @@ html.lenis body {
   background: #C5A880;
   border-radius: 4px;
 }
+
+/* Product modal scrollbar */
+.product-modal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #C5A880 transparent;
+}
+
+.product-modal-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.product-modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 12px 0;
+}
+
+.product-modal-scroll::-webkit-scrollbar-thumb {
+  background: #C5A880;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background-clip: content-box;
+}

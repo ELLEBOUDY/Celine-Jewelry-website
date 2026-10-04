@@ -110,21 +110,22 @@ export const ProductModal = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-2 sm:p-6 bg-black/70 backdrop-blur-xs overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-black/70 backdrop-blur-xs"
       onClick={() => setQuickViewProduct(null)}
     >
-      <button
-        onClick={() => setQuickViewProduct(null)}
-        className="fixed top-3 end-3 sm:top-6 sm:end-6 z-[60] w-10 h-10 rounded-full bg-white border border-[#EAE5DC] flex items-center justify-center text-[#1A1A1A] shadow-lg hover:bg-[#1A1A1A] hover:text-white transition-colors cursor-pointer"
-        aria-label={isAr ? 'إغلاق تفاصيل المنتج' : 'Close product details'}
-      >
-        <X className="w-5 h-5" />
-      </button>
-
       <div 
-        className="relative w-full max-w-4xl max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] bg-[#FAF8F5] border border-[#EAE5DC] rounded-2xl sm:rounded-3xl overflow-y-auto shadow-2xl my-2 sm:my-6"
+        data-lenis-prevent
+        className="product-modal-scroll relative w-full max-w-4xl max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-3rem)] bg-[#FAF8F5] border border-[#EAE5DC] rounded-2xl sm:rounded-3xl overflow-y-auto overscroll-contain touch-pan-y shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
+        <button
+          onClick={() => setQuickViewProduct(null)}
+          className={`absolute top-3 ${isAr ? 'left-3 sm:left-5' : 'right-3 sm:right-5'} z-[60] w-10 h-10 rounded-full bg-white border border-[#EAE5DC] flex items-center justify-center text-[#1A1A1A] shadow-lg hover:bg-[#1A1A1A] hover:text-white transition-colors cursor-pointer`}
+          aria-label={isAr ? 'إغلاق تفاصيل المنتج' : 'Close product details'}
+        >
+          <X className="w-5 h-5" />
+        </button>
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-start">
           
           {/* Left Large Showcase Image Carousel */}
