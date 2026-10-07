@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { Analytics } from '@vercel/analytics/react';
 import { useLanguage } from './context/LanguageContext.jsx';
 import { useCart } from './context/CartContext.jsx';
 import { Header } from './components/Header.jsx';
@@ -132,7 +133,9 @@ export const App = () => {
       {/* Cart Drawer & Modals */}
       <CartDrawer />
       <ProductModal />
-
+      
+      {/* Vercel Analytics */}
+      <Analytics />
     </div>
   );
 };
