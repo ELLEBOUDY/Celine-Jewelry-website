@@ -98,7 +98,7 @@ export const App = () => {
               </div>
 
               <div className="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {filteredHomeProducts.slice(0, 3).map((product) => (
+                {filteredHomeProducts.slice(3, 6).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
