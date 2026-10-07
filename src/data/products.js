@@ -25,7 +25,7 @@ export const productsData = [
     categoryLabelEn: 'Bespoke Rings',
     categoryLabelAr: 'خواتم مصممة',
     price: 700,
-    originalPrice: 800,
+    originalPrice: 850,
     image: '/images/1.jpg',
     images: [
       '/images/1.jpg',
