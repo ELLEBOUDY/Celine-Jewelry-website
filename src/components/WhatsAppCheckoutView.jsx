@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { trackEvent } from '../utils/analytics.js';
+import { createOrderInSupabase } from '../utils/orders.js';
 import { useCart } from '../context/CartContext.jsx';
 import { ArrowLeft, ArrowRight, User, Phone, MapPin, Sparkles, ShieldCheck, Lock, Send, Check } from 'lucide-react';
 
@@ -31,6 +32,8 @@ export const WhatsAppCheckoutView = () =>
   const [ notes, setNotes ] = useState('');
   const [ selectedPayment, setSelectedPayment ] = useState('cod');
   const [ orderPlaced, setOrderPlaced ] = useState(false);
+  const [ savingOrder, setSavingOrder ] = useState(false);
+  const [ orderSaveError, setOrderSaveError ] = useState('');
 
   // Validate form fields upon clicking "Send Order"
   const validateForm = () => {
@@ -116,7 +119,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
 شكراً لاختيارك CELINE JEWELRY! 👑 `
   };
 
-  const handleSendViaWhatsApp = () =>
+  const handleSendViaWhatsApp = async () =>
   {
     if (!validateForm()) {
       return;
@@ -128,6 +131,30 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
       value: cart.reduce((total, item) => total + item.product.price * item.quantity, 0),
       currency: 'EGP',
     });
+
+    // 1) Track the order in Supabase so it shows in the admin dashboard
+    setSavingOrder(true);
+    setOrderSaveError('');
+    try {
+      await createOrderInSupabase({
+        orderNumber,
+        fullName: fullName.trim(),
+        phoneNumber: phoneNumber.trim(),
+        city,
+        streetAddress: streetAddress.trim(),
+        notes: notes.trim(),
+        selectedPayment,
+        cart,
+        subtotal,
+        total,
+      });
+    } catch (e) {
+      console.warn('Order tracking failed (WhatsApp will still open):', e?.message);
+      setOrderSaveError(isAr ? 'تعذر حفظ الطلب في لوحة التحكم، لكن سيتم فتح واتساب.' : 'Order tracking failed, WhatsApp will still open.');
+    } finally {
+      setSavingOrder(false);
+    }
+
     triggerConfetti();
     setOrderPlaced(true);
     const storeWhatsAppNumber = "201028619308"; // Store owner's WhatsApp number
@@ -420,19 +447,22 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
               </div>
 
               {/* Big Dark Pill Submit CTA */}
+              {orderSaveError && (
+                <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">{orderSaveError}</p>
+              )}
               <button
                 id="send-whatsapp-order-cta"
                 type="button"
                 onClick={ handleSendViaWhatsApp }
-                disabled={ cart.length === 0 }
+                disabled={ cart.length === 0 || savingOrder }
                 className={`w-full min-h-12 px-3 py-3 rounded-full text-[10px] sm:text-sm leading-tight font-semibold tracking-wide sm:tracking-widest uppercase flex items-center justify-center gap-2 sm:gap-3 transition-all shadow-lg ${
-                  cart.length > 0
+                  cart.length > 0 && !savingOrder
                     ? 'bg-[#1A1A1A] hover:bg-[#333333] active:scale-[0.99] text-white cursor-pointer'
                     : 'bg-[#CCCCCC] text-[#888888] cursor-not-allowed'
                 }`}
               >
                 <Send className={`w-4 h-4 ${cart.length > 0 ? 'text-[#C5A880]' : 'text-[#AAAAAA]'}`} />
-                <span>{ t.sendOrderWhatsApp }</span>
+                <span>{ savingOrder ? (isAr ? 'جارٍ حفظ الطلب...' : 'Saving order...') : t.sendOrderWhatsApp }</span>
                 { isRTL ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" /> }
               </button>
 

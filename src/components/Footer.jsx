@@ -153,9 +153,10 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#777777] gap-4">
           <p>{t.rightsReserved}</p>
-          <span className="tracking-widest uppercase text-[10px] text-[#C5A880]">
+          <span className="tracking-widest pl-155 uppercase text-[10px] text-[#C5A880]">
             {t.provenanceTag}
           </span>
+          <button onClick={() => { setCurrentView('admin'); try { window.history.pushState({}, '', '/admin'); } catch { /* ignore */ } window.scrollTo({ top: 0 }); }} className="text-[10px] text-[#555] hover:text-white underline underline-offset-4 cursor-pointer">Admin</button>
         </div>
 
       </div>

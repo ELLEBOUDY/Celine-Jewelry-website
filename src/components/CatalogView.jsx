@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../context/LanguageContext.jsx';
-import { productsData } from '../data/products.js';
+import { useProducts } from '../context/ProductsContext.jsx';
 import { ProductCard } from './ProductCard.jsx';
 import { Search } from 'lucide-react';
 
 export const CatalogView = () => {
   const { t, language } = useLanguage();
+  const { products: productsData } = useProducts();
   const [activeTab, setActiveTab] = useState('all');
   const [search, setSearch] = useState('');
   const [activeSubcat, setActiveSubcat] = useState('all');

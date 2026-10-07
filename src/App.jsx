@@ -13,12 +13,25 @@ import { CatalogView } from './components/CatalogView.jsx';
 import { AboutUsView } from './components/AboutUsView.jsx';
 import { ProductModal } from './components/ProductModal.jsx';
 import { Footer } from './components/Footer.jsx';
-import { productsData } from './data/products.js';
+import { AdminDashboard } from './components/AdminDashboard.jsx';
+import { useProducts } from './context/ProductsContext.jsx';
 
 export const App = () => {
   const { t } = useLanguage();
   const { currentView, setCurrentView } = useCart();
+  const { products: productsData } = useProducts();
   const [activeCategory, setActiveCategory] = useState('all');
+
+  useEffect(() => {
+    // Deep-link: /admin or /?admin=1 or #admin opens the dashboard
+    try {
+      const path = window.location.pathname.replace(/\/$/, '');
+      const params = new URLSearchParams(window.location.search);
+      if (path === '/admin' || params.get('admin') === '1' || window.location.hash === '#admin') {
+        setCurrentView('admin');
+      }
+    } catch { /* ignore */ }
+  }, [setCurrentView]);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -56,7 +69,9 @@ export const App = () => {
 
       {/* Main Content Area */}
       <main className="flex-grow">
-        {currentView === 'checkout' ? (
+        {currentView === 'admin' ? (
+          <AdminDashboard />
+        ) : currentView === 'checkout' ? (
           <WhatsAppCheckoutView />
         ) : currentView === 'catalog' ? (
           <CatalogView />

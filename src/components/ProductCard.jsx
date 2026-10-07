@@ -13,6 +13,7 @@ export const ProductCard = ({ product }) => {
   const badgeText = isAr ? product.badgeAr : product.badge;
 
   const isWishlisted = wishlist.includes(product.id);
+  const outOfStock = product.inStock === false;
 
   return (
     <div className="luxury-fade-up group rounded-3xl p-3 sm:p-4 bg-[#F5F2EB] border border-[#EAE5DC] flex flex-col justify-between hover:shadow-lg transition-all duration-300">
@@ -78,17 +79,18 @@ export const ProductCard = ({ product }) => {
               )}
             </div>
 
-            <span className="text-[10px] font-bold tracking-wider uppercase text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
-              {t.inStock}
+            <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${outOfStock ? 'text-red-700 bg-red-100' : 'text-emerald-700 bg-emerald-100/70'}`}>
+              {outOfStock ? t.soldOut : t.inStock}
             </span>
           </div>
 
           {/* Add to Cart Button */}
           <button
-            onClick={() => addToCart(product)}
-            className="w-full py-3 rounded-full bg-[#EAE5DC] hover:bg-[#1A1A1A] text-[#1A1A1A] hover:text-white text-xs font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer shadow-xs"
+            onClick={() => !outOfStock && addToCart(product)}
+            disabled={outOfStock}
+            className={`w-full py-3 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 shadow-xs ${outOfStock ? 'bg-[#E5E0D5] text-[#999999] cursor-not-allowed' : 'bg-[#EAE5DC] hover:bg-[#1A1A1A] text-[#1A1A1A] hover:text-white cursor-pointer'}`}
           >
-            {t.addToCart}
+            {outOfStock ? t.soldOut : t.addToCart}
           </button>
         </div>
 

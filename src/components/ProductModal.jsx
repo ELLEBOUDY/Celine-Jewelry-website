@@ -70,6 +70,7 @@ export const ProductModal = () => {
   const isAr = language === 'ar';
   const name = isAr ? quickViewProduct.nameAr : quickViewProduct.nameEn;
   const description = isAr ? quickViewProduct.descriptionAr : quickViewProduct.descriptionEn;
+  const outOfStock = quickViewProduct.inStock === false;
 
   const handlePrevImage = (e) => {
     if (e) e.stopPropagation();
@@ -102,6 +103,7 @@ export const ProductModal = () => {
   };
 
   const handleInstantWhatsApp = () => {
+    if (outOfStock) return;
     addToCart(quickViewProduct, quantity, selectedColor);
     setQuickViewProduct(null);
     setCurrentView('checkout');
@@ -266,9 +268,9 @@ export const ProductModal = () => {
               </div>
 
               {/* In stock badge */}
-              <div className="flex items-center gap-1.5 text-xs text-[#59492E] font-medium mb-4">
-                <span className="w-2 h-2 rounded-full bg-[#59492E] animate-pulse" />
-                <span>{t.inStock}</span>
+              <div className="flex items-center gap-1.5 text-xs font-medium mb-4">
+                <span className={`w-2 h-2 rounded-full ${outOfStock ? 'bg-red-500' : 'bg-[#59492E] animate-pulse'}`} />
+                <span className={outOfStock ? 'text-red-700 font-bold' : 'text-[#59492E]'}>{outOfStock ? t.soldOut : t.inStock}</span>
               </div>
 
               <p className="text-xs text-[#666666] leading-relaxed mb-4">
@@ -362,23 +364,26 @@ export const ProductModal = () => {
                 {/* Add to Bag Button */}
                 <button
                   onClick={() => {
+                    if (outOfStock) return;
                     addToCart(quickViewProduct, quantity, selectedColor);
                     setQuickViewProduct(null);
                   }}
-                  className="flex-1 min-w-0 py-3 px-2 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer shadow-md transition-all"
+                  disabled={outOfStock}
+                  className={`flex-1 min-w-0 py-3 px-2 rounded-full text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition-all ${outOfStock ? 'bg-[#CCCCCC] text-[#888888] cursor-not-allowed' : 'bg-[#1A1A1A] hover:bg-[#333333] text-white cursor-pointer'}`}
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  <span>ADD TO BAG — {t.currency}{(quickViewProduct.price * quantity).toLocaleString()}</span>
+                  <span>{outOfStock ? t.soldOut : `ADD TO BAG — ${t.currency}${(quickViewProduct.price * quantity).toLocaleString()}`}</span>
                 </button>
               </div>
 
               {/* Instant WhatsApp Concierge Button */}
               <button
                 onClick={handleInstantWhatsApp}
-                className="w-full min-h-12 px-3 py-2.5 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer transition-all"
+                disabled={outOfStock}
+                className={`w-full min-h-12 px-3 py-2.5 rounded-full text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 transition-all ${outOfStock ? 'bg-[#CCCCCC] text-[#888888] cursor-not-allowed' : 'bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] cursor-pointer'}`}
               >
                 <Send className="w-3.5 h-3.5 text-[#59492E]" />
-                <span>{t.instantOrderWhatsApp}</span>
+                <span>{outOfStock ? t.soldOut : t.instantOrderWhatsApp}</span>
               </button>
 
               {/* 3 mini assurance badges */}

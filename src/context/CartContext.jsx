@@ -37,6 +37,7 @@ export const CartProvider = ({ children }) => {
   }, [wishlist]);
 
   const addToCart = (product, quantity = 1, selectedColor = null) => {
+    if (product?.inStock === false) return;
     const chosenColor = selectedColor || (product.colors?.[0] || null);
     const cartItemId = `${product.id}_${chosenColor?.id || 'default'}`;
 
