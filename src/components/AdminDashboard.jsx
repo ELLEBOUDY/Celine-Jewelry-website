@@ -18,6 +18,7 @@ const emptyForm = {
   originalPrice: '',
   image: '',
   images: '',
+  colors: [],
   badge: '',
   badgeAr: '',
   inStock: true,
@@ -37,6 +38,7 @@ const toForm = (p) => ({
   originalPrice: p.originalPrice ?? '',
   image: p.image || '',
   images: Array.isArray(p.images) ? p.images.join(', ') : (p.image || ''),
+  colors: Array.isArray(p.colors) ? p.colors.map((c) => ({ id: c.id || '', nameEn: c.nameEn || '', nameAr: c.nameAr || '', hex: c.hex || '#FFFFFF', border: c.border || '', image: c.image || '' })) : [],
   badge: p.badge || '',
   badgeAr: p.badgeAr || '',
   inStock: p.inStock !== false,
@@ -56,6 +58,14 @@ const fromForm = (f) => ({
   originalPrice: f.originalPrice === '' ? null : Number(f.originalPrice),
   image: f.image.trim() || (f.images.split(',').map(s => s.trim()).filter(Boolean)[0] || ''),
   images: f.images.split(',').map(s => s.trim()).filter(Boolean),
+  colors: Array.isArray(f.colors) ? f.colors.filter((c) => c.nameEn?.trim() || c.nameAr?.trim() || c.hex).map((c) => ({
+    id: (c.id?.trim() || c.nameEn?.trim() || 'color').toLowerCase().replace(/\s+/g, '-'),
+    nameEn: c.nameEn?.trim() || '',
+    nameAr: c.nameAr?.trim() || '',
+    hex: c.hex || '#FFFFFF',
+    ...(c.border?.trim() ? { border: c.border.trim() } : {}),
+    ...(c.image?.trim() ? { image: c.image.trim() } : {}),
+  })) : null,
   badge: f.badge.trim() || null,
   badgeAr: f.badgeAr.trim() || null,
   inStock: !!f.inStock,
@@ -404,6 +414,30 @@ export const AdminDashboard = () => {
           </div>
           <label className="text-xs font-bold">Main image (URL or /images/...)<input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} placeholder="/images/1.jpg" className="mt-1 w-full px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
           <label className="text-xs font-bold">All images (comma separated)<input value={form.images} onChange={(e) => setForm({ ...form, images: e.target.value })} className="mt-1 w-full px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
+          <div className="md:col-span-2 p-4 rounded-2xl bg-[#FAF8F5] border border-[#EAE5DC]">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold">Colors (optional)</p>
+              <button type="button" onClick={() => setForm((f) => ({ ...f, colors: [...(f.colors || []), { id: '', nameEn: '', nameAr: '', hex: '#FFFFFF', border: '', image: '' }] }))} className="px-3 py-1 rounded-full bg-[#1A1A1A] text-white text-[11px] cursor-pointer">+ Add color</button>
+            </div>
+            {(form.colors || []).length === 0 ? (
+              <p className="text-[11px] text-[#999]">No colors — product shows without color choices.</p>
+            ) : (
+              <div className="space-y-2">
+                {(form.colors || []).map((c, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-white border border-[#EAE5DC] grid grid-cols-2 md:grid-cols-4 gap-2 items-end">
+                    <label className="text-[11px] font-bold">Color<span className="mt-1 w-full h-9 rounded-xl border border-[#D5CEC0] block" style={{ backgroundColor: c.hex }} /><input type="color" value={c.hex} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, hex: e.target.value } : x) }))} className="mt-1 w-full h-8 cursor-pointer" /></label>
+                    <label className="text-[11px] font-bold">ID<input value={c.id} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, id: e.target.value } : x) }))} placeholder="white" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
+                    <label className="text-[11px] font-bold">Name EN<input value={c.nameEn} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, nameEn: e.target.value } : x) }))} placeholder="Crystal White" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
+                    <label className="text-[11px] font-bold">Name AR<input value={c.nameAr} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, nameAr: e.target.value } : x) }))} placeholder="أبيض كريستال" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
+                    <label className="text-[11px] font-bold">Hex<input value={c.hex} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, hex: e.target.value } : x) }))} placeholder="#FFFFFF" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal font-mono" /></label>
+                    <label className="text-[11px] font-bold">Border (optional)<input value={c.border || ''} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, border: e.target.value } : x) }))} placeholder="#D5CEC0" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal font-mono" /></label>
+                    <label className="text-[11px] font-bold">Image (optional)<input value={c.image || ''} onChange={(e) => setForm((f) => ({ ...f, colors: f.colors.map((x, i) => i === idx ? { ...x, image: e.target.value } : x) }))} placeholder="paste image URL" className="mt-1 w-full px-2 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
+                    <button type="button" onClick={() => setForm((f) => ({ ...f, colors: f.colors.filter((_, i) => i !== idx) }))} className="px-3 py-2 rounded-full bg-red-50 border border-red-200 text-red-700 text-[11px] cursor-pointer">Remove</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <label className="text-xs font-bold">Badge EN<input value={form.badge} onChange={(e) => setForm({ ...form, badge: e.target.value })} className="mt-1 w-full px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
           <label className="text-xs font-bold">Badge AR<input value={form.badgeAr} onChange={(e) => setForm({ ...form, badgeAr: e.target.value })} className="mt-1 w-full px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>
           <label className="text-xs font-bold md:col-span-2">Description EN<textarea value={form.descriptionEn} onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })} rows={2} className="mt-1 w-full px-3 py-2 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] font-normal" /></label>

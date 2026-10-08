@@ -226,8 +226,19 @@ export const productsData = [
     categoryLabelAr: 'أطقم الأتيليه',
     price: 450,
     originalPrice: 650,
-    image: '/images/deer-antlers-set.png',
-    images: [ '/images/deer-antlers-set.png' ],
+    image: '/images/deer-antlers-white.png',
+    images: [
+      '/images/deer-antlers-white.png',
+      '/images/deer-antlers-pink.png',
+      '/images/deer-antlers-red.png',
+      '/images/deer-antlers-green.png'
+    ],
+    colors: [
+      { id: 'white', nameEn: 'Crystal White', nameAr: 'أبيض كريستال', hex: '#FFFFFF', border: '#D5CEC0', image: '/images/deer-antlers-white.png' },
+      { id: 'pink', nameEn: 'Rose Pink', nameAr: 'وردي روز', hex: '#DE8DA0', image: '/images/deer-antlers-pink.png' },
+      { id: 'red', nameEn: 'Ruby Red', nameAr: 'أحمر ياقوتي', hex: '#B3122E', image: '/images/deer-antlers-red.png' },
+      { id: 'green', nameEn: 'Emerald Green', nameAr: 'أخضر زمردي', hex: '#0E7A4F', image: '/images/deer-antlers-green.png' }
+    ],
     badge: 'NEW',
     badgeAr: 'جديد',
     inStock: true,
