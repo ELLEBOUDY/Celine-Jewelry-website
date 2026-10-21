@@ -260,7 +260,9 @@ This removes friction for Egyptian customers who prefer WhatsApp-based shopping.
 
 ## 🛠️ Admin Dashboard (`/admin`)
 
-Password-gated with `VITE_ADMIN_PASSWORD` (default `celine123` locally — change in `.env`):
+Signed in with **Supabase Auth** (email + password) — create the admin user in
+*Supabase Dashboard → Authentication → Users → Add user* and tick **Auto Confirm User**.
+The anon key stays in the bundle but can no longer modify products, read orders or upload images.
 
 | Tab | What it does |
 |---|---|
@@ -270,13 +272,22 @@ Password-gated with `VITE_ADMIN_PASSWORD` (default `celine123` locally — chang
 
 Direct access only via `/admin` (no public footer link). `vercel.json` rewrites `/admin` to the SPA so refresh/share works.
 
+### 🔒 Access matrix (RLS + grants)
+
+| Role | `products` | `orders` | Storage writes |
+|---|---|---|---|
+| `anon` (visitor) | read | **insert only** (their own order) | ❌ |
+| `authenticated` (admin) | read + write | read + write | ✅ |
+| `service_role` (server) | full | full | full |
+
 ---
 
 ## 🚀 Deployment (Vercel)
 
 1. Push to `main` — Vercel auto-deploys.
-2. Set **Production** Environment Variables in Vercel dashboard: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_ADMIN_PASSWORD`.
+2. Set **Production** Environment Variables in Vercel dashboard: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
 3. **Redeploy** without build cache so the new env values are baked into the bundle.
+4. Create the admin account: *Supabase Dashboard → Authentication → Users → Add user* → tick **Auto Confirm User**.
 
 ---
 

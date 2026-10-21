@@ -47,9 +47,12 @@ export const createOrderInSupabase = async ({
     whatsapp_sent: true,
   };
 
-  const { data, error } = await supabase.from('orders').insert(payload).select().single();
+  // No .select() here on purpose: RETURNING would require SELECT on `orders`,
+  // and `anon` must NOT be able to read the table (it holds customer names,
+  // phone numbers and addresses). Customers only need INSERT.
+  const { error } = await supabase.from('orders').insert(payload);
   if (error) throw error;
-  return data;
+  return payload;
 };
 
 export const fetchOrders = async () => {

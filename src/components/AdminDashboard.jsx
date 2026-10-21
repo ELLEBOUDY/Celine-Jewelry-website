@@ -2,9 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useProducts } from '../context/ProductsContext.jsx';
 import { fetchOrders, updateOrderStatus, deleteOrder } from '../utils/orders.js';
 import { uploadProductImage, deleteProductImageByUrl } from '../utils/storage.js';
+import { signInAdmin, signOutAdmin, getAdminSession, onAdminAuthChange } from '../utils/auth.js';
 import { useCart } from '../context/CartContext.jsx';
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'celine-admin-2026';
 const CATEGORIES = ['rings', 'bracelets', 'necklaces', 'sets'];
 
 const emptyForm = {
@@ -78,8 +78,12 @@ export const AdminDashboard = () => {
   const { setCurrentView } = useCart();
   const { products, loading: productsLoading, createProduct, updateProduct, deleteProduct, refresh, usingLocal } = useProducts();
 
-  const [authed, setAuthed] = useState(() => localStorage.getItem('celine_admin_authed') === '1');
+  const [session, setSession] = useState(null);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loggingIn, setLoggingIn] = useState(false);
+  const authed = !!session;
   const [tab, setTab] = useState('products'); // products | orders | add
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -156,15 +160,43 @@ export const AdminDashboard = () => {
     if (authed) loadOrders();
   }, [authed]);
 
-  const handleLogin = (e) => {
+  // Restore an existing Supabase Auth session (persisted by supabase-js)
+  useEffect(() => {
+    let active = true;
+    getAdminSession().then(({ data }) => {
+      if (active) setSession(data?.session ?? null);
+    });
+    const unsubscribe = onAdminAuthChange((_event, nextSession) => {
+      setSession(nextSession ?? null);
+    });
+    return () => {
+      active = false;
+      unsubscribe?.();
+    };
+  }, []);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      localStorage.setItem('celine_admin_authed', '1');
-      setAuthed(true);
-      setPassword('');
-    } else {
-      alert('Wrong password');
+    setLoginError('');
+    if (!email.trim() || !password) {
+      setLoginError('Email and password are required.');
+      return;
     }
+    setLoggingIn(true);
+    const { data, error } = await signInAdmin(email, password);
+    setLoggingIn(false);
+    if (error) {
+      setLoginError(error.message || 'Sign in failed.');
+      setPassword('');
+      return;
+    }
+    setSession(data?.session ?? null);
+    setPassword('');
+  };
+
+  const handleLogout = async () => {
+    await signOutAdmin();
+    setSession(null);
   };
 
   const startEdit = (p) => {
@@ -249,16 +281,30 @@ export const AdminDashboard = () => {
       <div className="max-w-md mx-auto px-4 py-16">
         <div className="p-8 rounded-3xl bg-white border border-[#EAE5DC] shadow-xs">
           <h1 className="text-xl font-serif font-bold mb-2">Admin login</h1>
-          <p className="text-xs text-[#777] mb-4">Enter the admin password to manage products & orders.</p>
+          <p className="text-xs text-[#777] mb-4">Sign in with your Supabase admin account to manage products & orders.</p>
           <form onSubmit={handleLogin} className="space-y-3">
             <input
+              type="email"
+              autoComplete="username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Admin email"
+              className="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] text-sm focus:outline-none focus:border-[#59492E]"
+            />
+            <input
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               className="w-full px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#D5CEC0] text-sm focus:outline-none focus:border-[#59492E]"
             />
-            <button type="submit" className="w-full py-3 rounded-full bg-[#1A1A1A] text-white text-xs font-bold tracking-widest uppercase cursor-pointer">Login</button>
+            {loginError && (
+              <p className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl px-3 py-2">{loginError}</p>
+            )}
+            <button type="submit" disabled={loggingIn} className="w-full py-3 rounded-full bg-[#1A1A1A] text-white text-xs font-bold tracking-widest uppercase cursor-pointer disabled:opacity-60">
+              {loggingIn ? 'Signing in…' : 'Login'}
+            </button>
             <button type="button" onClick={() => { setCurrentView('home'); try { window.history.pushState({}, '', '/'); } catch { /* ignore */ } }} className="w-full py-2 text-xs text-[#777] cursor-pointer">← Back to store</button>
           </form>
         </div>
@@ -273,12 +319,13 @@ export const AdminDashboard = () => {
           <h1 className="text-2xl sm:text-3xl font-serif font-bold">Admin Dashboard</h1>
           <p className="text-xs text-[#777] mt-1">
             {products.length} products {usingLocal ? '(local fallback — run schema.sql + seed)' : '(live from Supabase)'} • {orders.length} orders loaded
+            {session?.user?.email ? ` • signed in as ${session.user.email}` : ''}
           </p>
         </div>
         <div className="flex gap-2">
           <button onClick={() => { refresh(); loadOrders(); }} className="px-4 py-2 rounded-full bg-white border border-[#D5CEC0] text-xs font-semibold cursor-pointer">Refresh</button>
           <button onClick={() => { setCurrentView('home'); try { window.history.pushState({}, '', '/'); } catch { /* ignore */ } }} className="px-4 py-2 rounded-full bg-[#1A1A1A] text-white text-xs font-semibold cursor-pointer">View store</button>
-          <button onClick={() => { localStorage.removeItem('celine_admin_authed'); setAuthed(false); }} className="px-4 py-2 rounded-full bg-white border border-[#D5CEC0] text-xs cursor-pointer">Logout</button>
+          <button onClick={handleLogout} className="px-4 py-2 rounded-full bg-white border border-[#D5CEC0] text-xs cursor-pointer">Logout</button>
         </div>
       </div>
 

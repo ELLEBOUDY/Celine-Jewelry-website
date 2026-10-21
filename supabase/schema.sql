@@ -32,12 +32,13 @@ create policy "Public read products"
   to anon, authenticated
   using (true);
 
--- MVP: allow anon insert/update/delete so the admin dashboard works without auth.
--- Tighten later with Supabase Auth (admin-only) if needed.
+-- Admin-only writes: only a signed-in user (authenticated) can change the catalog.
+-- The public storefront (anon) is read-only for products.
 drop policy if exists "Anon write products" on public.products;
-create policy "Anon write products"
+drop policy if exists "Authenticated write products" on public.products;
+create policy "Authenticated write products"
   on public.products for all
-  to anon, authenticated
+  to authenticated
   using (true)
   with check (true);
 
@@ -62,10 +63,13 @@ create table if not exists public.orders (
 
 alter table public.orders enable row level security;
 
+-- Orders hold customer names, phone numbers and addresses: only a signed-in
+-- admin may read them. Customers (anon) may only create their own order.
 drop policy if exists "Anon read orders" on public.orders;
-create policy "Anon read orders"
+drop policy if exists "Authenticated read orders" on public.orders;
+create policy "Authenticated read orders"
   on public.orders for select
-  to anon, authenticated
+  to authenticated
   using (true);
 
 drop policy if exists "Anon insert orders" on public.orders;
@@ -75,16 +79,18 @@ create policy "Anon insert orders"
   with check (true);
 
 drop policy if exists "Anon update orders" on public.orders;
-create policy "Anon update orders"
+drop policy if exists "Authenticated update orders" on public.orders;
+create policy "Authenticated update orders"
   on public.orders for update
-  to anon, authenticated
+  to authenticated
   using (true)
   with check (true);
 
 drop policy if exists "Anon delete orders" on public.orders;
-create policy "Anon delete orders"
+drop policy if exists "Authenticated delete orders" on public.orders;
+create policy "Authenticated delete orders"
   on public.orders for delete
-  to anon, authenticated
+  to authenticated
   using (true);
 
 -- ============ DATA API GRANTS ============
@@ -94,9 +100,16 @@ create policy "Anon delete orders"
 -- otherwise supabase-js / PostgREST / GraphQL return "permission denied".
 --
 -- These statements are idempotent — safe to re-run this whole file anytime.
---
--- NOTE: `anon` gets write access because the admin dashboard ships the anon key
--- to the browser (src/utils/supabase.js). If you later move the admin to
--- Supabase Auth, REVOKE the write privileges from `anon` and keep SELECT only.
-grant select, insert, update, delete on public.products to anon, authenticated, service_role;
-grant select, insert, update, delete on public.orders   to anon, authenticated, service_role;
+
+-- Public storefront (anon): read-only for products.
+revoke insert, update, delete on public.products from anon;
+grant select on public.products to anon;
+
+-- Public storefront (anon): customers may create their own order at checkout,
+-- but must NOT be able to read the table (it holds names, phones, addresses).
+revoke select, update, delete on public.orders from anon;
+grant insert on public.orders to anon;
+
+-- Signed-in admins (authenticated) and the server-side role (service_role).
+grant select, insert, update, delete on public.products to authenticated, service_role;
+grant select, insert, update, delete on public.orders   to authenticated, service_role;
