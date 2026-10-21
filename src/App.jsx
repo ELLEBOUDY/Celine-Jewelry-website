@@ -15,6 +15,7 @@ import { CatalogView } from './components/CatalogView.jsx';
 import { AboutUsView } from './components/AboutUsView.jsx';
 import { Footer } from './components/Footer.jsx';
 import { AdminDashboard } from './components/AdminDashboard.jsx';
+import { ProductModal } from './components/ProductModal.jsx';
 import { ProductPage } from './pages/ProductPage.jsx';
 import { NotFound } from './pages/NotFound.jsx';
 import { useProducts } from './context/ProductsContext.jsx';
@@ -161,6 +162,9 @@ export const App = () => {
 
       {/* Cart Drawer */}
       <CartDrawer />
+
+      {/* Quick view overlay */}
+      <ProductModal />
 
       {/* Vercel Analytics */}
       <Analytics />

@@ -17,6 +17,7 @@ export const CartProvider = ({ children }) => {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [wishlist, setWishlist] = useState(() => {
     try {
       const saved = localStorage.getItem('celine_wishlist');
@@ -115,6 +116,8 @@ export const CartProvider = ({ children }) => {
         setIsCartOpen,
         isCheckoutOpen,
         setIsCheckoutOpen,
+        quickViewProduct,
+        setQuickViewProduct,
         wishlist,
         toggleWishlist,
         triggerConfetti

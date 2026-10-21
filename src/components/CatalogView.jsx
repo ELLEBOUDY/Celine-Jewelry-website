@@ -92,7 +92,7 @@ export const CatalogView = () => {
             >
               {t.catRings}
             </button>
-            <button
+            {/* <button
               onClick={() => setActiveTab('bracelets')}
               className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${
                 activeTab === 'bracelets'
@@ -101,7 +101,7 @@ export const CatalogView = () => {
               }`}
             >
               {t.catBracelets}
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveTab('necklaces')}
               className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all cursor-pointer ${

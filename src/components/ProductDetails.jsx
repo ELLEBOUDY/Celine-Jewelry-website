@@ -16,8 +16,8 @@ import {
 } from 'lucide-react';
 
 // Product details (carousel + options + actions).
-// Shared by the standalone /product/:id page.
-export const ProductDetails = ({ product }) => {
+// Shared by the standalone /product/:id page and the quick-view modal.
+export const ProductDetails = ({ product, onClose }) => {
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
   const navigate = useNavigate();
@@ -108,6 +108,7 @@ export const ProductDetails = ({ product }) => {
   const handleInstantWhatsApp = () => {
     if (outOfStock) return;
     addToCart(product, quantity, selectedColor);
+    onClose?.();
     navigate('/checkout');
   };
 
@@ -347,6 +348,7 @@ export const ProductDetails = ({ product }) => {
               onClick={() => {
                 if (outOfStock) return;
                 addToCart(product, quantity, selectedColor);
+                onClose?.();
               }}
               disabled={outOfStock}
               className={`flex-1 min-w-0 py-3 px-2 rounded-full text-[10px] sm:text-xs leading-tight font-semibold tracking-wide sm:tracking-wider uppercase flex items-center justify-center gap-1.5 sm:gap-2 shadow-md transition-all ${outOfStock ? 'bg-[#CCCCCC] text-[#888888] cursor-not-allowed' : 'bg-[#1A1A1A] hover:bg-[#333333] text-white cursor-pointer'}`}

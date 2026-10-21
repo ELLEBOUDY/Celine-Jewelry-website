@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
-import { Heart } from 'lucide-react';
+import { Eye, Heart } from 'lucide-react';
 
 export const ProductCard = ({ product }) => {
   const { language, t } = useLanguage();
-  const { addToCart, wishlist, toggleWishlist } = useCart();
+  const { addToCart, setQuickViewProduct, wishlist, toggleWishlist } = useCart();
 
   const isAr = language === 'ar';
   const name = isAr ? product.nameAr : product.nameEn;
@@ -20,24 +20,38 @@ export const ProductCard = ({ product }) => {
     <div className="luxury-fade-up group rounded-3xl p-3 sm:p-4 bg-[#F5F2EB] border border-[#EAE5DC] flex flex-col justify-between hover:shadow-lg transition-all duration-300">
 
       {/* Image Container with Badges */}
-      <Link
-        to={`/product/${product.id}`}
-        className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#FAF8F5] cursor-pointer"
-      >
-        <img
-          src={product.image}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-        />
+      <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#FAF8F5]">
+        <Link
+          to={`/product/${product.id}`}
+          className="absolute inset-0 z-0 cursor-pointer"
+          aria-label={name}
+        >
+          <img
+            src={product.image}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+          />
+        </Link>
 
         {/* Badge on top-start */}
         {badgeText && (
-          <span className="absolute top-3 start-3 px-2.5 py-1 rounded-sm text-[9px] font-bold tracking-widest uppercase bg-[#C5A880] text-[#1A1A1A] shadow-xs">
+          <span className="absolute top-3 start-3 z-10 px-2.5 py-1 rounded-sm text-[9px] font-bold tracking-widest uppercase bg-[#C5A880] text-[#1A1A1A] shadow-xs">
             {badgeText}
           </span>
         )}
+
+        {/* Quick view button — opens the overlay without leaving the page */}
+        <button
+          type="button"
+          onClick={() => setQuickViewProduct(product)}
+          className="absolute bottom-3 end-3 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-xs flex items-center justify-center text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-colors shadow-xs cursor-pointer opacity-0 group-hover:opacity-100 focus:opacity-100"
+          aria-label={isAr ? 'عرض سريع' : 'Quick view'}
+          title={isAr ? 'عرض سريع' : 'Quick view'}
+        >
+          <Eye className="w-4 h-4" />
+        </button>
 
         {/* Wishlist Heart Button */}
         {/* <button
@@ -50,7 +64,7 @@ export const ProductCard = ({ product }) => {
         >
           <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-600 text-rose-600' : ''}`} />
         </button> */}
-      </Link>
+      </div>
 
       {/* Info Details */}
       <div className="pt-4 pb-2 px-1 flex flex-col flex-grow justify-between">

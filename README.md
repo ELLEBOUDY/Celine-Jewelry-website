@@ -80,6 +80,7 @@ Celine Jewelry website/
 │   │   ├── CategoryBar.jsx      # Horizontal scrollable category filter bar
 │   │   ├── ProductCard.jsx      # Individual product card (links to /product/:id)
 │   │   ├── ProductDetails.jsx   # Product carousel + color swatches + actions (shared)
+│   │   ├── ProductModal.jsx     # Quick-view overlay (opens over the catalog, no URL change)
 │   │   ├── CatalogView.jsx      # Filterable & searchable product grid (filters live in the URL)
 │   │   ├── CartDrawer.jsx       # Slide-in shopping cart drawer with color info
 │   │   ├── WhatsAppCheckoutView.jsx  # Checkout form → saves order to Supabase → WhatsApp order
@@ -278,10 +279,16 @@ refresh, browser back/forward and shareable links all work.
 | `/about` | About the atelier |
 | `/checkout` | WhatsApp checkout |
 | `/admin` | Admin dashboard (Supabase Auth) |
-| `/product/:id` | Standalone product page (SEO friendly, replaces the old quick-view modal) |
+| `/product/:id` | Standalone product page (SEO friendly) |
 | `*` | 404 page |
 
 `vercel.json` rewrites every path to `/index.html` so deep links work on refresh.
+
+**Product cards work two ways:** clicking the image or the title opens the standalone
+`/product/:id` page (shareable + indexable), while the 👁 *Quick view* button opens the
+quick-view overlay (`src/components/ProductModal.jsx`) on top of the current page — the
+overlay reuses the same `ProductDetails` component, closes on Escape / backdrop click, and
+locks the page scroll while open.
 
 ---
 
