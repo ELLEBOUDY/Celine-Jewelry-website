@@ -113,11 +113,11 @@ export const Footer = () => {
                   {t.catRings}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/catalog?category=bracelets" className="hover:text-white transition-colors cursor-pointer">
                   {t.catBracelets}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/catalog?category=necklaces" className="hover:text-white transition-colors cursor-pointer">
                   {t.catNecklaces}
