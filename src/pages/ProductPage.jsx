@@ -4,10 +4,11 @@ import { useLanguage } from '../context/LanguageContext.jsx';
 import { useProducts } from '../context/ProductsContext.jsx';
 import { ProductDetails } from '../components/ProductDetails.jsx';
 import { ProductCard } from '../components/ProductCard.jsx';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export const ProductPage = () => {
   const { id } = useParams();
-  const { language, t } = useLanguage();
+  const { language, t, isRTL } = useLanguage();
   const { products, loading } = useProducts();
   const isAr = language === 'ar';
 
@@ -46,6 +47,17 @@ export const ProductPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Back to catalog */}
+      <div className="mb-5">
+        <Link
+          to="/catalog"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-[#D5CEC0] text-[11px] font-semibold tracking-wider uppercase text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all duration-300 cursor-pointer"
+        >
+          {isRTL ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
+          {isAr ? 'رجوع للكتالوج' : 'Back to catalog'}
+        </Link>
+      </div>
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-[11px] text-[#888] mb-5" aria-label="Breadcrumb">
         <Link to="/" className="hover:text-[#1A1A1A] transition-colors">{isAr ? 'الرئيسية' : 'Home'}</Link>
