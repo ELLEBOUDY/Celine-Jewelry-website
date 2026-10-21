@@ -86,3 +86,17 @@ create policy "Anon delete orders"
   on public.orders for delete
   to anon, authenticated
   using (true);
+
+-- ============ DATA API GRANTS ============
+-- From 2026-10-30 Supabase no longer auto-grants Data API access to tables
+-- created in the `public` schema. Tables that already exist keep their grants,
+-- but any table created or re-created after that date needs explicit grants,
+-- otherwise supabase-js / PostgREST / GraphQL return "permission denied".
+--
+-- These statements are idempotent — safe to re-run this whole file anytime.
+--
+-- NOTE: `anon` gets write access because the admin dashboard ships the anon key
+-- to the browser (src/utils/supabase.js). If you later move the admin to
+-- Supabase Auth, REVOKE the write privileges from `anon` and keep SELECT only.
+grant select, insert, update, delete on public.products to anon, authenticated, service_role;
+grant select, insert, update, delete on public.orders   to anon, authenticated, service_role;
