@@ -256,15 +256,15 @@ export const AdminDashboard = () => {
     }
   };
 
-  // const handleDeleteOrder = async (orderId) => {
-  //   if (!confirm('Delete this order?')) return;
-  //   try {
-  //     await deleteOrder(orderId);
-  //     setOrders((prev) => prev.filter((o) => o.id !== orderId));
-  //   } catch (err) {
-  //     alert(err.message || 'Delete failed');
-  //   }
-  // };
+  const handleDeleteOrder = async (orderId, orderNumber) => {
+    if (!confirm(`Delete order ${orderNumber || ''}?\nThis permanently removes it from the database.`)) return;
+    try {
+      await deleteOrder(orderId);
+      setOrders((prev) => prev.filter((o) => o.id !== orderId));
+    } catch (err) {
+      alert(err.message || 'Delete failed');
+    }
+  };
 
   const filteredProducts = useMemo(
     () => products.filter((p) => !search || p.id.includes(search.toLowerCase()) || (p.nameEn || '').toLowerCase().includes(search.toLowerCase()) || (p.nameAr || '').includes(search)),
@@ -400,7 +400,7 @@ export const AdminDashboard = () => {
                         <option value="cancelled">cancelled</option>
                       </select>
                       <button onClick={() => setExpandedOrder(expandedOrder === o.id ? null : o.id)} className="px-3 py-1.5 rounded-full bg-white border border-[#D5CEC0] text-xs cursor-pointer">Details</button>
-                      {/* <button onClick={() => handleDeleteOrder(o.id)} className="px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs cursor-pointer">Delete</button> */}
+                      <button onClick={() => handleDeleteOrder(o.id, o.order_number)} className="px-3 py-1.5 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs cursor-pointer">Delete</button>
                     </div>
                   </div>
                   {expandedOrder === o.id && (
