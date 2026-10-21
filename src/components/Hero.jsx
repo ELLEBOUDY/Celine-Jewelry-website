@@ -1,10 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
-import { useCart } from '../context/CartContext.jsx';
 
 export const Hero = () => {
   const { t, language } = useLanguage();
-  const { setCurrentView } = useCart();
 
   const isAr = language === 'ar';
 
@@ -35,18 +34,18 @@ export const Hero = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
-            <button
-              onClick={() => setCurrentView('catalog')}
+            <Link
+              to="/catalog"
               className="px-6 sm:px-7 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all shadow-md cursor-pointer"
             >
               {t.exploreCollection}
-            </button>
-            <button
-              onClick={() => setCurrentView('about')}
+            </Link>
+            <Link
+              to="/about"
               className="px-6 sm:px-7 py-3.5 rounded-full border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer"
             >
               {t.atelierEdit}
-            </button>
+            </Link>
           </div>
 
           {/* 3 Metric Columns */}

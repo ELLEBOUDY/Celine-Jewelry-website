@@ -1,11 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
-import { useCart } from '../context/CartContext.jsx';
 import { ArrowRight, ArrowLeft, Flame } from 'lucide-react';
 
 export const CraftsmanshipSection = () => {
   const { t, isRTL } = useLanguage();
-  const { setCurrentView } = useCart();
 
   return (
     <section className="py-20 border-t border-[#EAE5DC] bg-[#FAF8F5]">
@@ -59,13 +58,13 @@ export const CraftsmanshipSection = () => {
               {t.craftsmanshipDesc}
             </p>
 
-            <button
-              onClick={() => setCurrentView('catalog')}
+            <Link
+              to="/catalog"
               className="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-[#1A1A1A] hover:text-[#9A7B56] transition-colors border-b border-[#1A1A1A] pb-1 cursor-pointer"
             >
               <span>{t.discoverOurStory}</span>
               {isRTL ? <ArrowLeft className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
-            </button>
+            </Link>
           </div>
 
         </div>

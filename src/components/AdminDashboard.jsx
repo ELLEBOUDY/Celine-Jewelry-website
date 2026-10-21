@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../context/ProductsContext.jsx';
 import { fetchOrders, updateOrderStatus, deleteOrder } from '../utils/orders.js';
 import { uploadProductImage, deleteProductImageByUrl } from '../utils/storage.js';
 import { signInAdmin, signOutAdmin, getAdminSession, onAdminAuthChange } from '../utils/auth.js';
-import { useCart } from '../context/CartContext.jsx';
 
 const CATEGORIES = ['rings', 'bracelets', 'necklaces', 'sets'];
 
@@ -75,7 +75,7 @@ const fromForm = (f) => ({
 });
 
 export const AdminDashboard = () => {
-  const { setCurrentView } = useCart();
+  const navigate = useNavigate();
   const { products, loading: productsLoading, createProduct, updateProduct, deleteProduct, refresh, usingLocal } = useProducts();
 
   const [session, setSession] = useState(null);
@@ -305,7 +305,7 @@ export const AdminDashboard = () => {
             <button type="submit" disabled={loggingIn} className="w-full py-3 rounded-full bg-[#1A1A1A] text-white text-xs font-bold tracking-widest uppercase cursor-pointer disabled:opacity-60">
               {loggingIn ? 'Signing in…' : 'Login'}
             </button>
-            <button type="button" onClick={() => { setCurrentView('home'); try { window.history.pushState({}, '', '/'); } catch { /* ignore */ } }} className="w-full py-2 text-xs text-[#777] cursor-pointer">← Back to store</button>
+            <button type="button" onClick={() => { navigate('/'); }} className="w-full py-2 text-xs text-[#777] cursor-pointer">← Back to store</button>
           </form>
         </div>
       </div>
@@ -324,7 +324,7 @@ export const AdminDashboard = () => {
         </div>
         <div className="flex gap-2">
           <button onClick={() => { refresh(); loadOrders(); }} className="px-4 py-2 rounded-full bg-white border border-[#D5CEC0] text-xs font-semibold cursor-pointer">Refresh</button>
-          <button onClick={() => { setCurrentView('home'); try { window.history.pushState({}, '', '/'); } catch { /* ignore */ } }} className="px-4 py-2 rounded-full bg-[#1A1A1A] text-white text-xs font-semibold cursor-pointer">View store</button>
+          <button onClick={() => { navigate('/'); }} className="px-4 py-2 rounded-full bg-[#1A1A1A] text-white text-xs font-semibold cursor-pointer">View store</button>
           <button onClick={handleLogout} className="px-4 py-2 rounded-full bg-white border border-[#D5CEC0] text-xs cursor-pointer">Logout</button>
         </div>
       </div>

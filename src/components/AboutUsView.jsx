@@ -1,12 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
-import { useCart } from '../context/CartContext.jsx';
 import { trackEvent } from '../utils/analytics.js';
 import { MessageCircle, Sparkles } from 'lucide-react';
 
 export const AboutUsView = () => {
   const { t } = useLanguage();
-  const { setCurrentView } = useCart();
 
   const handleOpenWhatsApp = () => {
     trackEvent('click_whatsapp', { source: 'about_us' });
@@ -43,12 +42,12 @@ export const AboutUsView = () => {
               <MessageCircle className="w-4 h-4 text-[#C5A880]" />
               <span>{t.testWhatsAppFlow}</span>
             </button>
-            <button
-              onClick={() => setCurrentView('catalog')}
+            <Link
+              to="/catalog"
               className="px-6 py-3.5 rounded-full bg-[#EAE5DC] hover:bg-[#ded7cb] text-[#1A1A1A] text-xs font-semibold tracking-widest uppercase transition-all cursor-pointer"
             >
               {t.explorePhilosophy}
-            </button>
+            </Link>
           </div>
         </div>
 

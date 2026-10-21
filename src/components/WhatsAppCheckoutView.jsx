@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { trackEvent } from '../utils/analytics.js';
 import { createOrderInSupabase } from '../utils/orders.js';
@@ -12,11 +13,11 @@ export const WhatsAppCheckoutView = () =>
     cart,
     subtotal,
     total,
-    setCurrentView,
     setIsCartOpen,
     triggerConfetti,
     clearCart
   } = useCart();
+  const navigate = useNavigate();
 
   const isAr = language === 'ar';
 
@@ -174,7 +175,7 @@ ${ notes ? '📝 ملاحظات: ' + notes : ''}
           <button
             onClick={ () =>
             {
-              setCurrentView('home');
+              navigate('/');
               setIsCartOpen(true);
             } }
             className="flex items-center gap-2 text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#1A1A1A] hover:text-[#9A7B56] transition-colors cursor-pointer max-w-full"

@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import {Heart, ShoppingBag, Globe, Menu, X } from 'lucide-react';
 import logo from '../../images/logo.png';
+
+const navLinkClass = ({ isActive }) =>
+  `text-xs font-semibold tracking-widest uppercase transition-colors cursor-pointer pb-1 ${
+    isActive
+      ? 'text-[#1A1A1A] border-b-2 border-[#1A1A1A]'
+      : 'text-[#666666] hover:text-[#1A1A1A]'
+  }`;
 
 export const Header = () => {
   const { t, language, toggleLanguage } = useLanguage();
@@ -10,8 +18,6 @@ export const Header = () => {
     totalItemsCount,
     total,
     setIsCartOpen,
-    currentView,
-    setCurrentView,
     wishlist
   } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,8 +35,8 @@ export const Header = () => {
         <div className="flex items-center justify-between gap-2 min-h-20 py-3 sm:h-20 sm:py-0">
           
           {/* Brand Logo */}
-          <button
-            onClick={() => setCurrentView('home')}
+          <Link
+            to="/"
             className="flex min-w-0 items-center gap-2 sm:gap-3 text-start cursor-pointer focus:outline-none"
           >
             <img
@@ -43,40 +49,19 @@ export const Header = () => {
                 {t.brandName}
               </span>
             </div>
-          </button>
+          </Link>
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-10">
-            <button
-              onClick={() => setCurrentView('home')}
-              className={`text-xs font-semibold tracking-widest uppercase transition-colors cursor-pointer pb-1 ${
-                currentView === 'home'
-                  ? 'text-[#1A1A1A] border-b-2 border-[#1A1A1A]'
-                  : 'text-[#666666] hover:text-[#1A1A1A]'
-              }`}
-            >
+            <NavLink to="/" end className={navLinkClass}>
               {t.navHome}
-            </button>
-            <button
-              onClick={() => setCurrentView('catalog')}
-              className={`text-xs font-semibold tracking-widest uppercase transition-colors cursor-pointer pb-1 ${
-                currentView === 'catalog'
-                  ? 'text-[#1A1A1A] border-b-2 border-[#1A1A1A]'
-                  : 'text-[#666666] hover:text-[#1A1A1A]'
-              }`}
-            >
+            </NavLink>
+            <NavLink to="/catalog" className={navLinkClass}>
               {t.navCatalog}
-            </button>
-            <button
-              onClick={() => setCurrentView('about')}
-              className={`text-xs font-semibold tracking-widest uppercase transition-colors cursor-pointer pb-1 ${
-                currentView === 'about'
-                  ? 'text-[#1A1A1A] border-b-2 border-[#1A1A1A]'
-                  : 'text-[#666666] hover:text-[#1A1A1A]'
-              }`}
-            >
+            </NavLink>
+            <NavLink to="/about" className={navLinkClass}>
               {t.navAbout}
-            </button>
+            </NavLink>
           </nav>
 
           {/* Actions Bar */}
@@ -121,33 +106,27 @@ export const Header = () => {
       {/* Mobile Nav Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#FAF8F5] border-b border-[#EAE5DC] px-6 py-4 space-y-3">
-          <button
-            onClick={() => {
-              setCurrentView('home');
-              setMobileMenuOpen(false);
-            }}
+          <Link
+            to="/"
+            onClick={() => setMobileMenuOpen(false)}
             className="block w-full text-start text-xs font-semibold tracking-widest uppercase py-2 text-[#1A1A1A]"
           >
             {t.navHome}
-          </button>
-          <button
-            onClick={() => {
-              setCurrentView('catalog');
-              setMobileMenuOpen(false);
-            }}
+          </Link>
+          <Link
+            to="/catalog"
+            onClick={() => setMobileMenuOpen(false)}
             className="block w-full text-start text-xs font-semibold tracking-widest uppercase py-2 text-[#1A1A1A]"
           >
             {t.navCatalog}
-          </button>
-          <button
-            onClick={() => {
-              setCurrentView('about');
-              setMobileMenuOpen(false);
-            }}
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setMobileMenuOpen(false)}
             className="block w-full text-start text-xs font-semibold tracking-widest uppercase py-2 text-[#1A1A1A]"
           >
             {t.navAbout}
-          </button>
+          </Link>
         </div>
       )}
     </header>

@@ -78,16 +78,23 @@ Celine Jewelry website/
 │   │   ├── Header.jsx           # Navbar with cart icon, language switcher & logo
 │   │   ├── Hero.jsx             # Full-screen hero section with CTA
 │   │   ├── CategoryBar.jsx      # Horizontal scrollable category filter bar
-│   │   ├── ProductCard.jsx      # Individual product card (shows SOLD OUT when out of stock)
-│   │   ├── ProductModal.jsx     # Product detail modal with carousel & color swatches
-│   │   ├── CatalogView.jsx      # Filterable & searchable product grid (live from Supabase)
+│   │   ├── ProductCard.jsx      # Individual product card (links to /product/:id)
+│   │   ├── ProductDetails.jsx   # Product carousel + color swatches + actions (shared)
+│   │   ├── CatalogView.jsx      # Filterable & searchable product grid (filters live in the URL)
 │   │   ├── CartDrawer.jsx       # Slide-in shopping cart drawer with color info
 │   │   ├── WhatsAppCheckoutView.jsx  # Checkout form → saves order to Supabase → WhatsApp order
-│   │   ├── AdminDashboard.jsx   # Password-gated `/admin`: products CRUD + uploads + orders + counters
+│   │   ├── AdminDashboard.jsx   # Auth-gated `/admin`: products CRUD + uploads + orders + counters
 │   │   ├── CraftsmanshipSection.jsx  # Brand story / artisan section
 │   │   ├── ValueBanners.jsx     # Value proposition banners
 │   │   ├── AboutUsView.jsx      # About the atelier page
 │   │   └── Footer.jsx           # Site footer with links & social
+│   │
+│   ├── pages/
+│   │   ├── ProductPage.jsx      # `/product/:id` standalone product page (SEO friendly)
+│   │   └── NotFound.jsx         # 404 page
+│   │
+│   ├── hooks/
+│   │   └── usePageMeta.js       # Keeps document.title / meta description in sync per route
 │   │
 │   ├── context/
 │   │   ├── CartContext.jsx      # Global cart state (blocks out-of-stock, add, remove, quantity, color, total)
@@ -96,6 +103,7 @@ Celine Jewelry website/
 │   │
 │   ├── utils/
 │   │   ├── supabase.js          # Supabase client (`VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`)
+│   │   ├── auth.js              # Supabase Auth helpers for the admin dashboard
 │   │   ├── orders.js            # `createOrderInSupabase` / fetch / status update / delete
 │   │   ├── storage.js           # Product image upload + delete (bucket `product-images`)
 │   │   └── analytics.js         # `trackEvent` (Google gtag forwarder)
@@ -255,6 +263,25 @@ CELINE JEWELRY uses a **WhatsApp-first checkout** model:
 This removes friction for Egyptian customers who prefer WhatsApp-based shopping.
 
 > Every successful order is also saved to Supabase (`orders`) **before** WhatsApp opens, so it instantly appears in `/admin` → Orders with full details.
+
+---
+
+## 🗺️ Routing
+
+Client-side routing with `react-router-dom` (v7). Every page has its own URL, so
+refresh, browser back/forward and shareable links all work.
+
+| Route | Page |
+|---|---|
+| `/` | Home — hero + curated best-sellers |
+| `/catalog` | Catalog — filters live in the URL (`?category=rings`, `?q=search`) |
+| `/about` | About the atelier |
+| `/checkout` | WhatsApp checkout |
+| `/admin` | Admin dashboard (Supabase Auth) |
+| `/product/:id` | Standalone product page (SEO friendly, replaces the old quick-view modal) |
+| `*` | 404 page |
+
+`vercel.json` rewrites every path to `/index.html` so deep links work on refresh.
 
 ---
 

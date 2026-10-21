@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { Analytics } from '@vercel/analytics/react';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { useLanguage } from './context/LanguageContext.jsx';
 import { useCart } from './context/CartContext.jsx';
 import { Header } from './components/Header.jsx';
@@ -12,28 +13,104 @@ import { CartDrawer } from './components/CartDrawer.jsx';
 import { WhatsAppCheckoutView } from './components/WhatsAppCheckoutView.jsx';
 import { CatalogView } from './components/CatalogView.jsx';
 import { AboutUsView } from './components/AboutUsView.jsx';
-import { ProductModal } from './components/ProductModal.jsx';
 import { Footer } from './components/Footer.jsx';
 import { AdminDashboard } from './components/AdminDashboard.jsx';
+import { ProductPage } from './pages/ProductPage.jsx';
+import { NotFound } from './pages/NotFound.jsx';
 import { useProducts } from './context/ProductsContext.jsx';
+import { usePageMeta } from './hooks/usePageMeta.js';
 
-export const App = () => {
+const HomeView = () => {
   const { t } = useLanguage();
-  const { currentView, setCurrentView } = useCart();
   const { products: productsData } = useProducts();
   const [activeCategory, setActiveCategory] = useState('all');
 
-  useEffect(() => {
-    // Deep-link: /admin or /?admin=1 or #admin opens the dashboard
-    try {
-      const path = window.location.pathname.replace(/\/$/, '');
-      const params = new URLSearchParams(window.location.search);
-      if (path === '/admin' || params.get('admin') === '1' || window.location.hash === '#admin') {
-        setCurrentView('admin');
-      }
-    } catch { /* ignore */ }
-  }, [setCurrentView]);
+  const filteredHomeProducts = activeCategory === 'all'
+    ? productsData
+    : productsData.filter(p => p.category === activeCategory);
 
+  return (
+    <>
+      <Hero />
+
+      {/* Curated Best-Sellers Grid */}
+      <section className="luxury-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="mb-8">
+          <span className="text-[10px] font-mono tracking-widest text-[#777777] uppercase block mb-1">
+            {t.sectionProvenance}
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-serif text-[#1A1A1A]">
+            {t.curatedBestsellers}
+          </h2>
+        </div>
+
+        <div className="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {filteredHomeProducts.slice(3, 6).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+
+        {/* View Full Collection Button */}
+        <div className="mt-10 text-center">
+          <Link
+            to="/catalog"
+            className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer hover:scale-105"
+          >
+            {t.exploreCollection} ({productsData.length})
+          </Link>
+        </div>
+      </section>
+
+      <CraftsmanshipSection />
+
+      {/* Value Guarantees Banners */}
+      <ValueBanners />
+    </>
+  );
+};
+
+const AboutPage = () => (
+  <>
+    <AboutUsView />
+    <CraftsmanshipSection />
+    <ValueBanners />
+  </>
+);
+
+const CatalogPage = () => {
+  const { t, language } = useLanguage();
+  usePageMeta(
+    language === 'ar' ? 'الكتالوج — L\'AURA Fine Atelier' : 'Catalog — L\'AURA Fine Atelier',
+    language === 'ar'
+      ? 'مجموعة مجوهرات فاخرة وإكسسوارات شخصية مختارة يدوياً.'
+      : 'Consciously crafted fine jewelry, heirloom leather goods and refined personal accessories.'
+  );
+  return <CatalogView />;
+};
+
+const AdminPage = () => {
+  const { language } = useLanguage();
+  usePageMeta(
+    language === 'ar' ? 'لوحة التحكم' : 'Admin Dashboard',
+    'L\'AURA admin dashboard'
+  );
+  return <AdminDashboard />;
+};
+
+// Scroll to top on every route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
+  return null;
+};
+
+export const App = () => {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -59,81 +136,32 @@ export const App = () => {
     };
   }, []);
 
-  const filteredHomeProducts = activeCategory === 'all'
-    ? productsData
-    : productsData.filter(p => p.category === activeCategory);
-
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#FAF8F5] text-[#1A1A1A] flex flex-col font-sans selection:bg-[#C5A880] selection:text-[#1A1A1A]">
+      <ScrollToTop />
+
       {/* Header */}
       <Header />
 
       {/* Main Content Area */}
       <main className="flex-grow">
-        {currentView === 'admin' ? (
-          <AdminDashboard />
-        ) : currentView === 'checkout' ? (
-          <WhatsAppCheckoutView />
-        ) : currentView === 'catalog' ? (
-          <CatalogView />
-        ) : currentView === 'about' ? (
-          <>
-            <AboutUsView />
-            <CraftsmanshipSection />
-            <ValueBanners />
-          </>
-        ) : (
-          /* Home View */
-          <>
-            <Hero />
-
-            {/* Curated Best-Sellers Grid */}
-            <section className="luxury-fade-up max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-              <div className="mb-8">
-                <span className="text-[10px] font-mono tracking-widest text-[#777777] uppercase block mb-1">
-                  {t.sectionProvenance}
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-serif text-[#1A1A1A]">
-                  {t.curatedBestsellers}
-                </h2>
-              </div>
-
-              <div className="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                {filteredHomeProducts.slice(3, 6).map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-
-              {/* View Full Collection Button */}
-              <div className="mt-10 text-center">
-                <button
-                  onClick={() => {
-                    setCurrentView('catalog');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#1A1A1A] hover:bg-[#333333] text-white text-xs font-semibold tracking-widest uppercase transition-all duration-300 shadow-md cursor-pointer hover:scale-105"
-                >
-                  {t.exploreCollection} ({productsData.length})
-                </button>
-              </div>
-            </section>
-
-            {/* Craftsmanship Section */}
-            <CraftsmanshipSection />
-
-            {/* Value Guarantees Banners */}
-            <ValueBanners />
-          </>
-        )}
+        <Routes>
+          <Route path="/" element={<HomeView />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/checkout" element={<WhatsAppCheckoutView />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
 
       {/* Footer */}
       <Footer />
 
-      {/* Cart Drawer & Modals */}
+      {/* Cart Drawer */}
       <CartDrawer />
-      <ProductModal />
-      
+
       {/* Vercel Analytics */}
       <Analytics />
     </div>

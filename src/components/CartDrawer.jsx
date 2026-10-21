@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import { trackEvent } from '../utils/analytics.js';
@@ -6,6 +7,7 @@ import { X, Plus, Minus, Trash2, ShieldCheck, ArrowRight, ArrowLeft } from 'luci
 
 export const CartDrawer = () => {
   const { language, t, isRTL } = useLanguage();
+  const navigate = useNavigate();
   const {
     cart,
     isCartOpen,
@@ -13,8 +15,7 @@ export const CartDrawer = () => {
     updateQuantity,
     removeFromCart,
     subtotal,
-    total,
-    setCurrentView
+    total
   } = useCart();
 
   if (!isCartOpen) return null;
@@ -28,7 +29,7 @@ export const CartDrawer = () => {
       currency: 'EGP',
     });
     setIsCartOpen(false);
-    setCurrentView('checkout');
+    navigate('/checkout');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

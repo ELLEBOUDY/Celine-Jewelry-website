@@ -1,23 +1,42 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useProducts } from '../context/ProductsContext.jsx';
 import { ProductCard } from './ProductCard.jsx';
 import { Search } from 'lucide-react';
 
+const CATEGORIES = ['all', 'rings', 'bracelets', 'necklaces', 'sets'];
+
 export const CatalogView = () => {
   const { t, language } = useLanguage();
   const { products: productsData } = useProducts();
-  const [activeTab, setActiveTab] = useState('all');
-  const [search, setSearch] = useState('');
-  const [activeSubcat, setActiveSubcat] = useState('all');
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const isAr = language === 'ar';
+
+  // Filter state lives in the URL: /catalog?category=rings
+  const activeTab = searchParams.get('category') || 'all';
+  const search = searchParams.get('q') || '';
+
+  const setActiveTab = (tab) => {
+    const next = new URLSearchParams(searchParams);
+    if (tab === 'all') next.delete('category');
+    else next.set('category', tab);
+    setSearchParams(next, { replace: true });
+  };
+
+  const setSearch = (value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set('q', value);
+    else next.delete('q');
+    setSearchParams(next, { replace: true });
+  };
 
   const filteredProducts = useMemo(() => {
     return productsData.filter((prod) => {
       const matchesTab =
         activeTab === 'all' || prod.category === activeTab;
-      
+
       const name = isAr ? prod.nameAr : prod.nameEn;
       const desc = isAr ? prod.descriptionAr : prod.descriptionEn;
       const matchesSearch =
@@ -27,7 +46,7 @@ export const CatalogView = () => {
 
       return matchesTab && matchesSearch;
     });
-  }, [activeTab, search, isAr]);
+  }, [activeTab, search, isAr, productsData]);
 
   return (
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

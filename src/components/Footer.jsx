@@ -1,6 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
-import { useCart } from '../context/CartContext.jsx';
 import { trackEvent } from '../utils/analytics.js';
 import { MessageCircle } from 'lucide-react';
 import logo from '../../images/logo.png';
@@ -35,7 +35,6 @@ const socialLinks = [
 
 export const Footer = () => {
   const { t } = useLanguage();
-  const { setCurrentView } = useCart();
 
   const handleOpenWhatsApp = () =>
   {
@@ -105,29 +104,29 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2 text-xs text-[#AAAAAA]">
               <li>
-                <button onClick={() => setCurrentView('home')} className="hover:text-white transition-colors cursor-pointer">
+                <Link to="/" className="hover:text-white transition-colors cursor-pointer">
                   {t.navHome}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentView('catalog')} className="hover:text-white transition-colors cursor-pointer">
+                <Link to="/catalog?category=rings" className="hover:text-white transition-colors cursor-pointer">
                   {t.catRings}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentView('catalog')} className="hover:text-white transition-colors cursor-pointer">
+                <Link to="/catalog?category=bracelets" className="hover:text-white transition-colors cursor-pointer">
                   {t.catBracelets}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentView('catalog')} className="hover:text-white transition-colors cursor-pointer">
+                <Link to="/catalog?category=necklaces" className="hover:text-white transition-colors cursor-pointer">
                   {t.catNecklaces}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentView('about')} className="hover:text-white transition-colors cursor-pointer">
+                <Link to="/about" className="hover:text-white transition-colors cursor-pointer">
                   {t.navAbout}
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -156,7 +155,7 @@ export const Footer = () => {
           <span className="tracking-widest uppercase text-[10px] text-[#C5A880]">
             {t.provenanceTag}
           </span>
-          <button onClick={() => { setCurrentView('admin'); try { window.history.pushState({}, '', '/admin'); } catch { /* ignore */ } window.scrollTo({ top: 0 }); }} className=" hidden text-[10px] text-[#555] hover:text-white underline underline-offset-4 cursor-pointer">Admin</button>
+          <Link to="/admin" className=" hidden text-[10px] text-[#555] hover:text-white underline underline-offset-4 cursor-pointer">Admin</Link>
         </div>
 
       </div>

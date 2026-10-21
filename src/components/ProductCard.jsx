@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import { Heart } from 'lucide-react';
 
 export const ProductCard = ({ product }) => {
   const { language, t } = useLanguage();
-  const { addToCart, setQuickViewProduct, wishlist, toggleWishlist } = useCart();
+  const { addToCart, wishlist, toggleWishlist } = useCart();
 
   const isAr = language === 'ar';
   const name = isAr ? product.nameAr : product.nameEn;
@@ -17,11 +18,11 @@ export const ProductCard = ({ product }) => {
 
   return (
     <div className="luxury-fade-up group rounded-3xl p-3 sm:p-4 bg-[#F5F2EB] border border-[#EAE5DC] flex flex-col justify-between hover:shadow-lg transition-all duration-300">
-      
+
       {/* Image Container with Badges */}
-      <div 
+      <Link
+        to={`/product/${product.id}`}
         className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#FAF8F5] cursor-pointer"
-        onClick={() => setQuickViewProduct(product)}
       >
         <img
           src={product.image}
@@ -49,7 +50,7 @@ export const ProductCard = ({ product }) => {
         >
           <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-600 text-rose-600' : ''}`} />
         </button> */}
-      </div>
+      </Link>
 
       {/* Info Details */}
       <div className="pt-4 pb-2 px-1 flex flex-col flex-grow justify-between">
@@ -57,11 +58,10 @@ export const ProductCard = ({ product }) => {
           <span className="text-[10px] uppercase tracking-wider text-[#777777] font-semibold block mb-1">
             {material}
           </span>
-          <h3 
-            onClick={() => setQuickViewProduct(product)}
-            className="text-base font-serif font-medium text-[#1A1A1A] mb-3 line-clamp-1 group-hover:text-[#9A7B56] transition-colors cursor-pointer"
-          >
-            {name}
+          <h3 className="text-base font-serif font-medium text-[#1A1A1A] mb-3 line-clamp-1 group-hover:text-[#9A7B56] transition-colors">
+            <Link to={`/product/${product.id}`} className="hover:underline cursor-pointer">
+              {name}
+            </Link>
           </h3>
         </div>
 
